@@ -6,6 +6,6 @@
 		"npm":  "1.2.10"
 	},
 	"dependencies": {
-		"express": "2.5.x"
+		"express": "3.1.x"
 	}
 }
