@@ -1,6 +1,10 @@
 {
 	"name": "whiteboard",
 	"version": "0.0.1",
+	"engines": {
+		"node": "0.8.19",
+		"npm":  "1.1.61"
+	}
 	"dependencies": {
 		"express": "2.3.11"
 	}
