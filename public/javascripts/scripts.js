@@ -12,8 +12,8 @@
 
 	var socket = {
 		ON_SOCKET_DATA : 'ON_SOCKET_DATA',
-		connectUrl : 'http://whitebord.herokuapp.com/',
-//		connectUrl : 'http://172.23.92.170:3000/',
+		// connectUrl : 'http://whitebord.herokuapp.com/',
+		connectUrl : location.origin,
 		init : function() {
 			socket.io = io.connect(socket.connectUrl);
 			socket.io.on('connect', socket.onConnected);
@@ -76,10 +76,10 @@
 			}
 		},
 		getPosX :function(data) {
-			return data.x || data.clientX || data.changedTouches[0].clientX;
+			return data.x || data.offsetX || data.changedTouches[0].clientX - data.changedTouches[0].target.offsetLeft;
 		},
 		getPosY :function(data) {
-			return data.y || data.clientY || data.changedTouches[0].clientY;
+			return data.y || data.offsetY || data.changedTouches[0].clientY - data.changedTouches[0].target.offsetTop;
 		}
 	};
 
@@ -91,27 +91,28 @@
 			});
 
 			canvas.init();
-			canvas.element.addEventListener(EVT.start, this, false);
+			canvas.element.addEventListener(EVT.start, app, false);
+
 		},
 		handleEvent : function(e) {
-			//e.preventDefault();
 			var action;
 			switch (e.type) {
 				case EVT.start:
 					action = 'start';
 					// canvas.draw(EVT.start, e);
-					window.addEventListener(EVT.move, this, false);
-					window.addEventListener(EVT.end, this, false);
+					canvas.element.addEventListener(EVT.move, app, false);
+					canvas.element.addEventListener(EVT.end, app, false);
 					break;
 				case EVT.move:
+					e.preventDefault();
 					action = 'move';
 					// canvas.draw(EVT.move, e);
 					break;
 				case EVT.end:
 					action = 'end';
 					// canvas.draw(EVT.end, e);
-					window.removeEventListener(EVT.move, this, false);
-					window.removeEventListener(EVT.end, this, false);
+					canvas.element.removeEventListener(EVT.move, app, false);
+					canvas.element.removeEventListener(EVT.end, app, false);
 					break;
 				default :
 					break;
