@@ -12,7 +12,7 @@
 
 	var socket = {
 		ON_SOCKET_DATA : 'ON_SOCKET_DATA',
-		connectUrl : 'http://172.25.20.25:3000',
+		connectUrl : 'http://whitebord.herokuapp.com/',
 		init : function() {
 			socket.io = io.connect(socket.connectUrl);
 			socket.io.on('connect', socket.onConnected);
