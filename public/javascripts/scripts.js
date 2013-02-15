@@ -44,6 +44,7 @@
 		canvasId : 'canvas',
 		init : function() {
 			canvas.element = document.getElementById(canvas.canvasId);
+			canvas.element.width = window.innerWidth;
 			canvas.ctx = canvas.element.getContext("2d");
 			canvas.isDrow = false;
 		},
