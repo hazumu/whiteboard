@@ -4,6 +4,8 @@ var express = require('express')
   , http = require('http')
   , path = require('path');
 
+const MONGO_URL = process.env.MONGOHQ_URL || 'mongodb://localhost/mongo_data';
+
 var app = express();
 
 app.configure(function(){
