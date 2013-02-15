@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8">
     <title><%= title %></title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+</head>
+<body>
+<h1>socket.io canvasアプリ</h1>
+	<canvas width="500" height="500" id="canvas"></canvas>
+	<ul>
+		<li id="connectId"></li>
+		<li id="type"></li>
+	</ul>
+	<script src="/socket.io/socket.io.js"></script>
+    <script src="/javascripts/scripts.js"></script>
+</body>
 </html>
