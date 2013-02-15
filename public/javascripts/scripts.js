@@ -45,6 +45,7 @@
 			canvas.element = document.getElementById(canvas.canvasId);
 			canvas.ctx = canvas.element.getContext("2d");
 			canvas.isDrow = false;
+			canvas.width = window.innerWidth;
 		},
 		draw : function(type, data) {
 			var ctx = canvas.ctx,
