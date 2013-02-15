@@ -13,6 +13,7 @@
 	var socket = {
 		ON_SOCKET_DATA : 'ON_SOCKET_DATA',
 		connectUrl : 'http://whitebord.herokuapp.com/',
+//		connectUrl : 'http://172.23.92.170:3000/',
 		init : function() {
 			socket.io = io.connect(socket.connectUrl);
 			socket.io.on('connect', socket.onConnected);
@@ -43,9 +44,9 @@
 		canvasId : 'canvas',
 		init : function() {
 			canvas.element = document.getElementById(canvas.canvasId);
+			canvas.element.width = window.innerWidth;
 			canvas.ctx = canvas.element.getContext("2d");
 			canvas.isDrow = false;
-			canvas.width = window.innerWidth;
 		},
 		draw : function(type, data) {
 			var ctx = canvas.ctx,
@@ -93,7 +94,7 @@
 			canvas.element.addEventListener(EVT.start, this, false);
 		},
 		handleEvent : function(e) {
-			e.preventDefault();
+			//e.preventDefault();
 			var action;
 			switch (e.type) {
 				case EVT.start:
