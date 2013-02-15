@@ -93,6 +93,7 @@
 			canvas.element.addEventListener(EVT.start, this, false);
 		},
 		handleEvent : function(e) {
+			e.preventDefault();
 			var action;
 			switch (e.type) {
 				case EVT.start:
