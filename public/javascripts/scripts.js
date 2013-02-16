@@ -138,7 +138,6 @@
 					canvas.element.addEventListener(EVT.end, app, false);
 					break;
 				case EVT.move:
-					e.preventDefault();
 					action = 'move';
 					if(!app.isDrow) return;
 					e.preventDefault();
