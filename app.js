@@ -38,12 +38,14 @@ var io = socketIO.listen(server);
 
 // クライアントが接続してきたときの処理
 io.sockets.on('connection', function(socket) {
-	console.log("connection");
+	socket.on('newconnect', function(data) {
+    io.sockets.emit('newconnect', { value: data.value });
+  });
 	// メッセージを受けたときの処理
 	socket.on('message', function(data) {
 		// つながっているクライアント全員に送信
 		console.log("message");
-		io.sockets.emit('message', { value: data.value });
+		socket.broadcast.emit('message', { value: data.value });
 	});
 	
 	// クライアントが切断したときの処理
