@@ -64,6 +64,9 @@
 			canvas.element.width = window.innerWidth;
 			canvas.ctx = canvas.element.getContext("2d");
 			canvas.isDrow = false;
+			if (window.bitmapData !== '') {
+				this.addImage();
+			}
 		},
 		// draw : function(type, data) {
 		// 	var ctx = canvas.ctx,
@@ -98,11 +101,24 @@
 			ctx.lineTo(tox, toy);
 			ctx.stroke();
 		},
+		addImage: function() {
+			var ctx = canvas.ctx;
+			var image = new Image();
+			image.onload = $.proxy(function() {
+				console.log(window.bitmapData);
+				console.log(ctx);
+				ctx.drawImage(image, 0, 0);
+			}, this);
+			image.src = window.bitmapData;
+		},
 		getPosX :function(data) {
 			return data.x || data.offsetX || data.changedTouches[0].clientX - data.changedTouches[0].target.offsetLeft;
 		},
 		getPosY :function(data) {
 			return data.y || data.offsetY || data.changedTouches[0].clientY - data.changedTouches[0].target.offsetTop;
+		},
+		getDataUrl: function() {
+			return canvas.element.toDataURL('image/png');
 		}
 	};
 
@@ -124,7 +140,8 @@
 
 			canvas.init();
 			canvas.element.addEventListener(EVT.start, app, false);
-
+			// save
+			$('#saveBtn').on('click', $.proxy(this.save, this));
 		},
 		handleEvent : function(e) {
 			e.preventDefault();
@@ -213,6 +230,23 @@
 		onNewConnected : function(e, data) {
 			console.log(data);
 			app.connectIdElm.append('<span>'+data.socketid+'</span>,');
+			canvas.draw(data.action, data);
+		},
+		save: function(e) {
+			console.log('click save button');
+			var url = '/room_save';
+
+			var data = canvas.getDataUrl(),
+					id = $(e.target).data('id');
+
+			$.ajax({
+				type: 'POST',
+				url: url,
+				data: {
+					id: id,
+					data: data
+				}
+			});
 		}
 	};
 
