@@ -12,8 +12,8 @@
 
 	var socket = {
 		ON_SOCKET_DATA : 'ON_SOCKET_DATA',
-		connectUrl : 'http://whitebord.herokuapp.com/',
-//		connectUrl : 'http://172.23.92.170:3000/',
+		//connectUrl : 'http://whitebord.herokuapp.com/',
+		connectUrl : 'http://172.23.92.170:3000/',
 		init : function() {
 			socket.io = io.connect(socket.connectUrl);
 			socket.io.on('connect', socket.onConnected);
@@ -47,6 +47,9 @@
 			canvas.element.width = window.innerWidth;
 			canvas.ctx = canvas.element.getContext("2d");
 			canvas.isDrow = false;
+			if (window.bitmapData !== '') {
+				this.addImage();
+			}
 		},
 		draw : function(type, data) {
 			var ctx = canvas.ctx,
@@ -75,11 +78,24 @@
 					break;
 			}
 		},
+		addImage: function() {
+			var ctx = canvas.ctx;
+			var image = new Image();
+			image.onload = $.proxy(function() {
+				console.log(window.bitmapData);
+				console.log(ctx);
+				ctx.drawImage(image, 0, 0);
+			}, this);
+			image.src = window.bitmapData;
+		},
 		getPosX :function(data) {
 			return data.x || data.clientX || data.changedTouches[0].clientX;
 		},
 		getPosY :function(data) {
 			return data.y || data.clientY || data.changedTouches[0].clientY;
+		},
+		getDataUrl: function() {
+			return canvas.element.toDataURL('image/png');
 		}
 	};
 
@@ -92,6 +108,9 @@
 
 			canvas.init();
 			canvas.element.addEventListener(EVT.start, this, false);
+
+			// save
+			$('#saveBtn').on('click', $.proxy(this.save, this));
 		},
 		handleEvent : function(e) {
 			e.preventDefault();
@@ -125,6 +144,22 @@
 		},
 		onSocketData :function(e, data) {
 			canvas.draw(data.action, data);
+		},
+		save: function(e) {
+			console.log('click save button');
+			var url = '/room_save';
+
+			var data = canvas.getDataUrl(),
+					id = $(e.target).data('id');
+
+			$.ajax({
+				type: 'POST',
+				url: url,
+				data: {
+					id: id,
+					data: data
+				}
+			});
 		}
 	};
 
