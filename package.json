@@ -9,6 +9,7 @@
 		"express": "3.1.x",
 		"ejs": "*",
 		"stylus": "*",
-		"socket.io": "*"
+		"socket.io": "*",
+		"mongoos": "*"
 	}
 }
