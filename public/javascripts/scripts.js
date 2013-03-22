@@ -13,7 +13,8 @@
 	var socket = {
 		ON_SOCKET_DATA : 'ON_SOCKET_DATA',
 		//connectUrl : 'http://whitebord.herokuapp.com/',
-		connectUrl : 'http://172.23.92.170:3000/',
+		//connectUrl : 'http://172.23.92.170:3000/',
+		connectUrl : 'http://172.23.93.25:3000/',
 		init : function() {
 			socket.io = io.connect(socket.connectUrl);
 			socket.io.on('connect', socket.onConnected);
