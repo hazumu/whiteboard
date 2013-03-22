@@ -9,6 +9,9 @@
 		"express": "3.1.x",
 		"ejs": "*",
 		"stylus": "*",
-		"socket.io": "*"
+		"socket.io": "*",
+		"mongoose": "*",
+		"passport": "*",
+		"passport-twitter": "*"
 	}
 }
