@@ -5,7 +5,7 @@ var express  = require('express'),
 		http            = require('http'),
 		path            = require('path'),
 		passport        = require('passport'),
-		twitterStrategy = require('passport-twitter').Strategy,
+		twitterStrategy = require('passport-twitter').Stategy,
 		app             = express();
 
 app.configure(function(){
@@ -99,14 +99,12 @@ var io = socketIO.listen(server);
 
 // クライアントが接続してきたときの処理
 io.sockets.on('connection', function(socket) {
-	socket.on('newconnect', function(data) {
-    io.sockets.emit('newconnect', { value: data.value });
-  });
+	console.log("connection");
 	// メッセージを受けたときの処理
 	socket.on('message', function(data) {
 		// つながっているクライアント全員に送信
 		console.log("message");
-		socket.broadcast.emit('message', { value: data.value });
+		io.sockets.emit('message', { value: data.value });
 	});
 	
 	// クライアントが切断したときの処理
@@ -120,7 +118,6 @@ io.sockets.on('connection', function(socket) {
 var TWITTER_CONSUMER_KEY = "jUFkxa7JCwObA1gLn2d1cA";
 var TWITTER_CONSUMER_SECRET = "Kitndv0bBmHyZjqt9BdEeuIsPt8Q8gi51CWGRrHP54";
 
-console.log(twitterStrategy);
 passport.use(new twitterStrategy({
   consumerKey: TWITTER_CONSUMER_KEY,
   consumerSecret: TWITTER_CONSUMER_SECRET,
