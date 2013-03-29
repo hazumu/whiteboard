@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+	<title><%= title %></title>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+
+<section>
+<h1><%= title %></h1>
+	<canvas height="500" id="canvas"></canvas>
+	<ul>
+		<li id="connectId"></li>
+		<li id="type"></li>
+	</ul>
+	<button id="saveBtn" data-id="<%= id %>">保存</button>
+</section>
+<script>
+;(function(window) {
+	window.bitmapData = '<%= bitmapData %>';
+
+}(window));
+</script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/javascripts/scripts.js"></script>
+</body>
+</html>
