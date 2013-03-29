@@ -1,7 +1,7 @@
 var express  = require('express'),
 		mongoose = require('mongoose'),
-		routesIndex     = require('./routes/index'),
-		routesRoom      = require('./routes/room'),
+		routes     = require('./routes'),
+		routesRoom     = require('./routes/room'),
 		http            = require('http'),
 		path            = require('path'),
 		passport        = require('passport'),
@@ -16,9 +16,11 @@ app.configure(function(){
 	app.use(express.logger('dev'));
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
-	app.use(app.router);
+	app.use(express.cookieParser()); // session使うためにパーサーを有効に
+	app.use(express.session({secret: 'hogesecret'})); // session有効
 	app.use(passport.initialize());
 	app.use(passport.session());
+	app.use(app.router); // sessionとinitializeの後じゃないと動かない
 	app.use(require('stylus').middleware(__dirname + '/public'));
 	app.use(express.static(path.join(__dirname, 'public')));
 });
@@ -31,7 +33,57 @@ passport.deserializeUser(function(obj, done){
 });
 
 app.configure('development', function(){
-  app.use(express.errorHandler());
+	app.use(express.errorHandler());
+});
+
+
+// model
+var RoomProvider = require('./models/roomprovider').RoomProvider;
+
+// index
+app.get('/', ensureAuthenticated, routes.index);
+
+// ルーム画面
+app.get('/room/:id', routesRoom.room);
+
+// ルーム作成
+app.post('/room_create', function(req, res, next) {
+	// ルーム名を取得
+	var name = req.body.name
+	RoomProvider.save({
+		name: name,
+		bitmapData: ''
+	}, function() {
+		// 保存終了したらリダイレクト
+		res.redirect('/');
+	});
+});
+
+// 基本的なselect,insert,update,deleteを実装できたら素敵
+// ルーム削除
+app.post('/room_delete', function(req, res, next) {
+});
+
+// ルーム編集
+app.post('/room_edit', function(req, res, next) {
+});
+
+// ルームsave
+app.post('/room_save', function(req, res, next) {
+	console.log('res',req.body);
+	RoomProvider.update(req.body, function() {
+		res.redirect('/');
+	});
+});
+
+// セッション
+app.get('/login', function(req, res) {
+		res.render('login');
+})
+
+app.get('/logout', function(req, res){
+	req.logout();
+	res.redirect('/');
 });
 
 app.get('/', routes.index);
@@ -70,7 +122,6 @@ io.sockets.on('connection', function(socket) {
 var TWITTER_CONSUMER_KEY = "jUFkxa7JCwObA1gLn2d1cA";
 var TWITTER_CONSUMER_SECRET = "Kitndv0bBmHyZjqt9BdEeuIsPt8Q8gi51CWGRrHP54";
 
-console.log(twitterStrategy);
 passport.use(new twitterStrategy({
   consumerKey: TWITTER_CONSUMER_KEY,
   consumerSecret: TWITTER_CONSUMER_SECRET,
@@ -85,28 +136,16 @@ passport.use(new twitterStrategy({
   }
 ));
 
-app.get('/account/twitter', twitterEnsureAuthenticated, routes.account);
+// ユーザーからリクエスト
+app.get("/auth/twitter", passport.authenticate('twitter'));
 
-app.get('/login/twitter', routes.login_facebook);
+// Twitterからcallbackうけるルート
+app.get("/auth/twitter/callback", passport.authenticate('twitter', {
+	successRedirect: '/',
+	failureRedirect: '/login'
+}));
 
-app.get('/auth/twitter',
-  passport.authenticate('twitter'),
-  function(req, res){}
-);
-
-app.get('/auth/twitter/callback', 
-  passport.authenticate('twitter', { failureRedirect: '/login/twitter' }),
-  function(req, res) {
-    res.redirect('/');
-  }
-);
-
-app.get('/logout/twitter', function(req, res){
-  req.logout();
-  res.redirect('/');
-});
-
-function twitterEnsureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
-  res.redirect('/login/twitter');
-};
+function ensureAuthenticated(req, res, next) {
+	if (req.isAuthenticated()) { return next(); }
+	res.redirect('/login')
+}

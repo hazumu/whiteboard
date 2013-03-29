@@ -8,12 +8,37 @@
 	<link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
 <body>
+<section>
 <h1>socket.io canvasアプリ</h1>
 	<canvas height="500" id="canvas"></canvas>
 	<ul id="info">
 		<li>接続ID:<span id="connectId"><span></li>
 		<li>接続方式：<span id="type"></span></li>
 	</ul>
+</section>
+
+<section>
+<h1>ルーム一覧</h1>
+<% for (var i in lists)  { %> 
+<p><a href="./room/<%= lists[i].id %>"><%= lists[i].name %></a></p>
+<% } %> 
+</section>
+
+<section>
+	<h1>ルーム作成</h1>
+	<form method="post" action="/room_create">
+	<div class="post">
+		<p>
+				<span>ルーム名: </span>
+				<input type="text" name="name">
+		</p>
+		<p>
+				<input type="submit" value="送信">
+		</p>
+	</div>
+	</form>
+</section>
+<a href="/logout">logout</a>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/javascripts/scripts.js"></script>
 </body>
