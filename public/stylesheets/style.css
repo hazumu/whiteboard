@@ -103,12 +103,12 @@ img {
   border: 1px #aaa solid;
   background: -webkit-linear-gradient(top, #fcfcfc 0%, #e0e0e0 100%);
 }
-.func-container button.touch,
-.tool-container button.touch {
+.func-container button.btn-touch,
+.tool-container button.btn-touch {
   background: #fff;
 }
-.func-container button.selected,
-.tool-container button.selected {
+.func-container button.btn-selected,
+.tool-container button.btn-selected {
   background: -webkit-linear-gradient(top, #f10000 0%, #c40000 100%);
   color: #fff;
 }

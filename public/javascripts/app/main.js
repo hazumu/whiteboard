@@ -2,9 +2,10 @@ define([
 	'jquery',
 	'/socket.io/socket.io.js',
 	'app/socket',
-	'app/canvas'
-], function($, io, socket, canvas) {
-	
+	'app/canvas',
+	'app/view/ToolBar'
+], function($, io, socket, canvas, ToolBar) {
+
 	var EVT = 'ontouchend' in window.document ? {
 		start : 'touchstart',
 		move : 'touchmove',
@@ -33,6 +34,11 @@ define([
 
 			// save
 			$('#saveBtn').on('click', $.proxy(this.save, this));
+
+			var toolBtns = new ToolBar({
+				el : '.tool-btn-container'
+			});
+			
 		},
 		handleEvent : function(e) {
 			var action;
