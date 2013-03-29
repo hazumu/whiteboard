@@ -129,6 +129,7 @@ passport.use(new twitterStrategy({
     passport.session.accessToken = token;
     passport.session.profile = profile;
     process.nextTick(function () {
+	console.log(profile);
       return done(null, profile);
     });
   }
