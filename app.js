@@ -1,7 +1,7 @@
-var express  = require('express'),
-		mongoose = require('mongoose'),
-		routes     = require('./routes'),
-		routesRoom     = require('./routes/room'),
+var express         = require('express'),
+		mongoose        = require('mongoose'),
+		routes          = require('./routes'),
+		routesRoom      = require('./routes/room'),
 		http            = require('http'),
 		path            = require('path'),
 		passport        = require('passport'),
@@ -16,11 +16,11 @@ app.configure(function(){
 	app.use(express.logger('dev'));
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
-	app.use(express.cookieParser()); // session使うためにパーサーを有効に
-	app.use(express.session({secret: 'hogesecret'})); // session有効
+	app.use(express.cookieParser());                  // session使うためにパーサーを有効に
+	app.use(express.session({secret: 'hogesecret'})); // session有効 引数の内容を調査
 	app.use(passport.initialize());
 	app.use(passport.session());
-	app.use(app.router); // sessionとinitializeの後じゃないと動かない
+	app.use(app.router);                              // sessionとinitializeの後じゃないと動かない
 	app.use(require('stylus').middleware(__dirname + '/public'));
 	app.use(express.static(path.join(__dirname, 'public')));
 });
@@ -35,7 +35,6 @@ passport.deserializeUser(function(obj, done){
 app.configure('development', function(){
 	app.use(express.errorHandler());
 });
-
 
 // model
 var RoomProvider = require('./models/roomprovider').RoomProvider;
@@ -61,16 +60,13 @@ app.post('/room_create', function(req, res, next) {
 
 // 基本的なselect,insert,update,deleteを実装できたら素敵
 // ルーム削除
-app.post('/room_delete', function(req, res, next) {
-});
+app.post('/room_delete', function(req, res, next) {});
 
 // ルーム編集
-app.post('/room_edit', function(req, res, next) {
-});
+app.post('/room_edit', function(req, res, next) {});
 
 // ルームsave
 app.post('/room_save', function(req, res, next) {
-	console.log('res',req.body);
 	RoomProvider.update(req.body, function() {
 		res.redirect('/');
 	});
@@ -128,9 +124,9 @@ passport.use(new twitterStrategy({
 		passport.session.accessToken = token;
 		passport.session.profile = profile;
 		process.nextTick(function () {
-		return done(null, profile);
+			return done(null, profile);
 	});
-	}));
+}));
 
 // ユーザーからリクエスト
 app.get("/auth/twitter", passport.authenticate('twitter'));
