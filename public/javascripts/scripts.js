@@ -101,6 +101,33 @@
 			ctx.lineTo(tox, toy);
 			ctx.stroke();
 		},
+		draw : function(type, data) {
+			var ctx = canvas.ctx,
+			pX = canvas.getPosX(data),
+			pY = canvas.getPosY(data);
+
+			switch (type) {
+				case 'start':
+					canvas.isDrow = true;
+					ctx.beginPath();
+					ctx.moveTo(pX, pY);
+					break;
+				case 'move':
+					if (!canvas.isDrow) return;
+					ctx.lineTo(pX, pY);
+					ctx.stroke();
+					break;
+				case 'end':
+					if (!canvas.isDrow) return;
+					ctx.lineTo(pX, pY);
+					ctx.stroke();
+					ctx.closePath();
+					canvas.isDrow = false;
+					break;
+				default :
+					break;
+			}
+		},
 		addImage: function() {
 			var ctx = canvas.ctx;
 			var image = new Image();
@@ -139,7 +166,7 @@
 			$(window).on(socket.ON_NEW_CONNECT, app.onNewConnected);
 
 			canvas.init();
-			canvas.element.addEventListener(EVT.start, app, false);
+			canvas.element.addEventListener(EVT.start, this, false);
 			// save
 			$('#saveBtn').on('click', $.proxy(this.save, this));
 		},
