@@ -101,33 +101,6 @@
 			ctx.lineTo(tox, toy);
 			ctx.stroke();
 		},
-		draw : function(type, data) {
-			var ctx = canvas.ctx,
-			pX = canvas.getPosX(data),
-			pY = canvas.getPosY(data);
-
-			switch (type) {
-				case 'start':
-					canvas.isDrow = true;
-					ctx.beginPath();
-					ctx.moveTo(pX, pY);
-					break;
-				case 'move':
-					if (!canvas.isDrow) return;
-					ctx.lineTo(pX, pY);
-					ctx.stroke();
-					break;
-				case 'end':
-					if (!canvas.isDrow) return;
-					ctx.lineTo(pX, pY);
-					ctx.stroke();
-					ctx.closePath();
-					canvas.isDrow = false;
-					break;
-				default :
-					break;
-			}
-		},
 		addImage: function() {
 			var ctx = canvas.ctx;
 			var image = new Image();
@@ -167,11 +140,11 @@
 
 			canvas.init();
 			canvas.element.addEventListener(EVT.start, this, false);
+
 			// save
 			$('#saveBtn').on('click', $.proxy(this.save, this));
 		},
 		handleEvent : function(e) {
-			e.preventDefault();
 			var action;
 			e.preventDefault();
 			canvas.element.addEventListener(EVT.start, app, false);
@@ -275,26 +248,11 @@
 		onNewConnected : function(e, data) {
 			console.log(data);
 			app.connectIdElm.append('<span>'+data.socketid+'</span>,');
-			canvas.draw(data.action, data);
-		},
-		save: function(e) {
-			console.log('click save button');
-			var url = '/room_save';
-
-			var data = canvas.getDataUrl(),
-					id = $(e.target).data('id');
-
-			$.ajax({
-				type: 'POST',
-				url: url,
-				data: {
-					id: id,
-					data: data
-				}
-			});
 		}
 	};
 
 	app.init();
 
 }(jQuery, window));
+
+			

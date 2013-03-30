@@ -1,12 +1,10 @@
 var express  = require('express'),
 		mongoose = require('mongoose'),
-		routes     = require('./routes'),
-		routesRoom     = require('./routes/room'),
-		http            = require('http'),
-		path            = require('path'),
-		passport        = require('passport'),
-		twitterStrategy = require('passport-twitter').Strategy,
-		app             = express();
+		routesIndex = require('./routes/index'),
+		routesRoom  = require('./routes/room'),
+		http     = require('http'),
+		path     = require('path'),
+		app      = express();
 
 app.configure(function(){
 	app.set('port', process.env.PORT || 3000);
@@ -16,20 +14,9 @@ app.configure(function(){
 	app.use(express.logger('dev'));
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
-	app.use(express.cookieParser()); // session使うためにパーサーを有効に
-	app.use(express.session({secret: 'hogesecret'})); // session有効
-	app.use(passport.initialize());
-	app.use(passport.session());
-	app.use(app.router); // sessionとinitializeの後じゃないと動かない
+	app.use(app.router);
 	app.use(require('stylus').middleware(__dirname + '/public'));
 	app.use(express.static(path.join(__dirname, 'public')));
-});
-
-passport.serializeUser(function(user, done){
-  done(null, user);
-});
-passport.deserializeUser(function(obj, done){
-  done(null, obj);
 });
 
 app.configure('development', function(){
@@ -41,7 +28,7 @@ app.configure('development', function(){
 var RoomProvider = require('./models/roomprovider').RoomProvider;
 
 // index
-app.get('/', ensureAuthenticated, routes.index);
+app.get('/', routesIndex.index);
 
 // ルーム画面
 app.get('/room/:id', routesRoom.room);
@@ -74,16 +61,18 @@ app.post('/room_save', function(req, res, next) {
 	RoomProvider.update(req.body, function() {
 		res.redirect('/');
 	});
-});
 
-// セッション
-app.get('/login', function(req, res) {
-		res.render('login');
-})
-
-app.get('/logout', function(req, res){
-	req.logout();
-	res.redirect('/');
+	// ルーム名を取得
+	/*
+	var name = req.body.name
+	RoomProvider.save({
+		name: name,
+		bitmapData: ''
+	}, function() {
+		// 保存終了したらリダイレクト
+		res.redirect('/');
+	});
+	*/
 });
 
 
@@ -115,35 +104,3 @@ io.sockets.on('connection', function(socket) {
 	});
 });
 
-
-// ここからtwitter認証
-var TWITTER_CONSUMER_KEY = "jUFkxa7JCwObA1gLn2d1cA";
-var TWITTER_CONSUMER_SECRET = "Kitndv0bBmHyZjqt9BdEeuIsPt8Q8gi51CWGRrHP54";
-
-passport.use(new twitterStrategy({
-  consumerKey: TWITTER_CONSUMER_KEY,
-  consumerSecret: TWITTER_CONSUMER_SECRET,
-  callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
-  },
-  function(token, tokenSecret, profile, done) {
-    passport.session.accessToken = token;
-    passport.session.profile = profile;
-    process.nextTick(function () {
-      return done(null, profile);
-    });
-  }
-));
-
-// ユーザーからリクエスト
-app.get("/auth/twitter", passport.authenticate('twitter'));
-
-// Twitterからcallbackうけるルート
-app.get("/auth/twitter/callback", passport.authenticate('twitter', {
-	successRedirect: '/',
-	failureRedirect: '/login'
-}));
-
-function ensureAuthenticated(req, res, next) {
-	if (req.isAuthenticated()) { return next(); }
-	res.redirect('/login')
-}

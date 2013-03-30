@@ -10,8 +10,6 @@
 		"ejs": "*",
 		"stylus": "*",
 		"socket.io": "*",
-		"mongoose": "*",
-		"passport": "*",
-		"passport-twitter": "*"
+		"mongoos": "*"
 	}
 }
