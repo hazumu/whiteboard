@@ -10,7 +10,6 @@ require.config({
 			exports: '_'
 		}
 	},
-
 	paths: {
 		jquery: 'vendor/jquery',
 		backbone : 'vendor/backbone',
