@@ -38,22 +38,23 @@ img
 	height 480px
 	position relative
 
-.tools-container button
-	border 1px #aaa solid
-	background -webkit-linear-gradient(top, rgba(252,252,252,1) 0%,rgba(224,224,224,1) 100%)
-	&.btn-touched
+.tools-container
+	.btn-touched
 		background #fff
-	&.btn-selected
+	.btn-selected
 		background -webkit-linear-gradient(top, rgba(241, 0, 0,1) 0%,rgba(196, 0, 0,1) 100%)
 		color #fff
-	&.btn-disabled
+	.btn-disabled
 		color: #aaa;
-		
-
+	button
+		border 1px #aaa solid
+		background -webkit-linear-gradient(top, rgba(252,252,252,1) 0%,rgba(224,224,224,1) 100%)
+	
 .func-tool-container 
 	position absolute
 	top 5px
 	right 5px
+	z-index 10
 	ul
 		display -webkit-box
 	li
@@ -67,6 +68,7 @@ img
 	position absolute
 	top 0
 	left 0
+	z-index 10
 	ul
 		height 480px
 		border-right 1px #aaa solid
@@ -81,13 +83,23 @@ img
 			button
 				border-top none
 	button
-		width 41px
-		height 41px
+		width 40px
+		height 40px
 		text-align center
 		border-left none
-		&.close
+		&.btn-tools-close
 			background -webkit-linear-gradient(top, rgba(100,100,100,1) 0%,rgba(50,50,50,1) 100%)
 			color #fff
 			height 30px
-
-		
+.btn-tools-open
+	width 35px
+	height 35px
+	position absolute
+	z-index 1
+	top 5px
+	left 5px
+	border 1px #aaa solid
+	background -webkit-linear-gradient(top, rgba(252,252,252,1) 0%,rgba(224,224,224,1) 100%)
+	border-radius 20px
+	opacity .5
+	line-height 35px

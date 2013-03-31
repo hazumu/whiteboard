@@ -3,9 +3,11 @@ define([
 	'/socket.io/socket.io.js',
 	'app/socket',
 	'app/canvas',
+	'app/model/DrawState',
+	'app/collection/Paths',
 	'app/view/Tools'
-], function($, io, socket, canvas, Tools) {
-
+], function($, io, socket, canvas, DrawState, Paths, Tools) {
+	var toolBtns, pathCollection, drawState;
 	var EVT = 'ontouchend' in window.document ? {
 		start : 'touchstart',
 		move : 'touchmove',
@@ -35,8 +37,11 @@ define([
 			// save
 			$('#saveBtn').on('click', $.proxy(this.save, this));
 
-			var toolBtns = new Tools({
-				el : '.tools-container'
+			drawState = new DrawState();
+			pathCollection = new Paths();
+			toolBtns = new Tools({
+				el : '.tools-container',
+				model : drawState
 			});
 		},
 		handleEvent : function(e) {

@@ -1,10 +1,10 @@
 define([
 	'jquery',
-	'app/model/DrawState',
 	'app/view/View',
 	'app/view/DrawTool',
-	'app/view/FuncTool'
-	], function($, DrawState, View, DrawTool, FuncTool) {
+	'app/view/FuncTool',
+	'app/view/Button'
+	], function($, View, DrawTool, FuncTool, Button) {
 		var Tools = View.extend({
 			btnsElm : undefined,
 			opneBtnElm : undefined,
@@ -14,29 +14,29 @@ define([
 				this.btnInit();
 			},
 			events : {
-				'click .close' : 'closeTools'
+				'click .btn-tools-close' : 'closeTools',
+				'click .btn-tools-open' : 'openTools'
 			},
 			btnInit : function() {
-				var drawState = new DrawState();
 				var penciBtnl = new DrawTool({
 					name : 'pencil',
 					el : '#pencil-btn',
-					model : drawState
+					model : this.model
 				});
 				var eraserBtn = new DrawTool({
 					name : 'eraser',
 					el : '#eraser-btn',
-					model : drawState
+					model : this.model
 				});
 				var colorBtn = new DrawTool({
 					name : 'color',
 					el : '#color-btn',
-					model : drawState
+					model : this.model
 				});
 				var thicknessBtn = new DrawTool({
 					name : 'thickness',
 					el : '#thickness-btn',
-					model : drawState
+					model : this.model
 				});
 				var undoBtn = new FuncTool({
 					name : 'undo',
@@ -54,9 +54,16 @@ define([
 					name : 'save',
 					el : '#save-btn'
 				});
+				var openBtn = new Button({
+					name : 'open',
+					el : '.btn-tools-open'
+				});
+			},
+			openTools : function() {
+				this.btnsElm.show();
 			},
 			closeTools : function() {
-				this.hide();
+				this.btnsElm.hide();
 			}
 		});
 
