@@ -4,6 +4,7 @@ define([
 	], function($, View) {
 
 		var Button = View.extend({
+			name : "none",
 			initialize : function() {
 			},
 			touchStartHandler : function() {
@@ -19,10 +20,10 @@ define([
 				}
 			},
 			touchEndHandler : function() {
-				this.changeBtnClass(true);
+				this.changeBtnClass(false);
 			}
 		}, {
-			CN_TOUCH_START : 'btn-touch',
+			CN_TOUCH_START : 'btn-touched',
 			CN_SELECTED : 'btn-selected'
 		});
 

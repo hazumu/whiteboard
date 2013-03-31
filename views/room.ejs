@@ -7,24 +7,29 @@
 	<link rel='stylesheet' href='/stylesheets/style.css' />
 </head>
 <body>
-<div class="paint-container">
+<div class="wrapper">
 	<canvas height="480" id="canvas"></canvas>
-	<div class="func-container">
-		<ul>
-			<li><button class="small">UNDO</button></li>
-			<li><button class="small">REDO</button></li>
-			<li><button class="small">CLEAR</button></li>
-			<li><button class="small">SAVE</button></li>
-		</ul>
-	</div>
-	<div class="tool-container">
-		<ul class="tool-btn-container">
-			<li><button class="close">✖</button></li>
-			<li><button class="" id="pencilBtn">★</button></li>
-			<li><button class="icon-upload-alt" id="eraserBtn">★</button></li>
-			<li><button class="icon-plus-sign" id="colorBtn">★</button></li>
-			<li><button class="icon-plus-sign" id="thicknessBtn">★</button></li>			
-		</ul>
+	<div class="tools-container">
+		<div class="btn-container">
+			<div class="func-tool-container">
+				<ul>
+					<li><button class="" id="undo-btn">UNDO</button></li>
+					<li><button class="" id="redo-btn">REDO</button></li>
+					<li><button class="" id="clear-btn">CLEAR</button></li>
+					<li><button class="" id="save-btn">SAVE</button></li>
+				</ul>
+			</div>
+			<div class="draw-tool-container">
+				<ul>
+					<li><button class="close">✖</button></li>
+					<li><button class="" id="pencil-btn">★</button></li>
+					<li><button class="icon-upload-alt" id="eraser-btn">★</button></li>
+					<li><button class="icon-plus-sign" id="color-btn">★</button></li>
+					<li><button class="icon-plus-sign" id="thickness-btn">★</button></li>			
+				</ul>
+			</div>
+		</div>
+		<div class="btn-tools-open">open</div>
 	</div>
 </div>
 <section>

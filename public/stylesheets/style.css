@@ -88,68 +88,68 @@ fieldset {
 img {
   vertical-align: bottom;
 }
-.paint-container {
+.wrapper {
   width: 320px;
   height: 480px;
   position: relative;
 }
-.func-container {
+.tools-container button {
+  border: 1px #aaa solid;
+  background: -webkit-linear-gradient(top, #fcfcfc 0%, #e0e0e0 100%);
+}
+.tools-container button.btn-touched {
+  background: #fff;
+}
+.tools-container button.btn-selected {
+  background: -webkit-linear-gradient(top, #f10000 0%, #c40000 100%);
+  color: #fff;
+}
+.tools-container button.btn-disabled {
+  color: #aaa;
+}
+.func-tool-container {
   position: absolute;
   top: 5px;
   right: 5px;
 }
-.func-container button,
-.tool-container button {
-  border: 1px #aaa solid;
-  background: -webkit-linear-gradient(top, #fcfcfc 0%, #e0e0e0 100%);
-}
-.func-container button.btn-touch,
-.tool-container button.btn-touch {
-  background: #fff;
-}
-.func-container button.btn-selected,
-.tool-container button.btn-selected {
-  background: -webkit-linear-gradient(top, #f10000 0%, #c40000 100%);
-  color: #fff;
-}
-.func-container ul {
+.func-tool-container ul {
   display: -webkit-box;
 }
-.func-container li {
+.func-tool-container li {
   margin-right: 5px;
 }
-.func-container button {
+.func-tool-container button {
   border-radius: 5px;
   width: 60px;
   height: 30px;
 }
-.tool-container {
+.draw-tool-container {
   position: absolute;
   top: 0;
   left: 0;
 }
-.tool-container ul {
+.draw-tool-container ul {
   height: 480px;
   border-right: 1px #aaa solid;
   background: #f6f6f6;
 }
-.tool-container li {
+.draw-tool-container li {
   margin-right: -1px;
   text-align: center;
 }
-.tool-container li:not(:last-child) button {
+.draw-tool-container li:not(:last-child) button {
   border-bottom: none;
 }
-.tool-container li:first-child button {
+.draw-tool-container li:first-child button {
   border-top: none;
 }
-.tool-container button {
+.draw-tool-container button {
   width: 41px;
   height: 41px;
   text-align: center;
   border-left: none;
 }
-.tool-container button.close {
+.draw-tool-container button.close {
   background: -webkit-linear-gradient(top, #646464 0%, #323232 100%);
   color: #fff;
   height: 30px;

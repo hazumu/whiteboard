@@ -4,11 +4,12 @@ define([
 	'app/view/Button'
 	], function($, DrawState, Button) {
 
-		var ToolButton = Button.extend({
+		var DrawTool = Button.extend({
 			model: null,
 			name : '',
-			initialize : function() {
+			initialize : function(params) {
 				var self = this;
+				this.name = params.name;
 				this.model.on('change', function(e) {
 					self.changeDrawState(e.changed.type);
 				});
@@ -24,5 +25,5 @@ define([
 			}
 		});
 
-		return ToolButton;
+		return DrawTool;
 });
