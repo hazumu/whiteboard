@@ -41,7 +41,8 @@ define([
 			pathCollection = new Paths();
 			toolBtns = new Tools({
 				el : '.tools-container',
-				model : drawState
+				model : drawState,
+				collection : pathCollection
 			});
 		},
 		handleEvent : function(e) {
@@ -68,6 +69,13 @@ define([
 					app.isDrow = false;
 					canvas.element.removeEventListener(EVT.move, app, false);
 					canvas.element.removeEventListener(EVT.end, app, false);
+					pathCollection.add({
+						startPos : {x:app.pastX, y: app.pastY},
+						endPos : {x: canvas.getPosX(e), y: canvas.getPosY(e)},
+						color : '#000',
+						thickness : '1',
+						type : 'pencil'
+					});
 					break;
 				default :
 					break;
