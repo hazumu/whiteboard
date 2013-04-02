@@ -5,10 +5,13 @@ define([
 
 		var Button = View.extend({
 			name : "none",
+			isDisable : false,
 			initialize : function() {
 			},
 			touchStartHandler : function() {
-				this.$el.addClass(Button.CN_TOUCH_START);
+				if(!this.isDisable) {
+					this.$el.addClass(Button.CN_TOUCH_START);
+				}
 			},
 			changeBtnClass : function(b) {
 				if (b) {
@@ -20,11 +23,13 @@ define([
 				}
 			},
 			enable: function(b) {
+				this.isDisable = false;
 				this.$el.removeClass(Button.CN_TOUCH_START);
 				this.$el.removeClass(Button.CN_SELECTED);
 				this.$el.removeClass(Button.CN_DISABLED);
 			},
 			disable: function(b) {
+				this.isDisable = true;
 				this.$el.removeClass(Button.CN_TOUCH_START);
 				this.$el.removeClass(Button.CN_SELECTED);
 				this.$el.addClass(Button.CN_DISABLED);

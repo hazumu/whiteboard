@@ -37,6 +37,9 @@ define(["jquery"], function($) {
 		},
 		getDataUrl: function() {
 			return canvas.element.toDataURL('image/png');
+		},
+		clear: function() {
+			canvas.ctx.clearRect(0, 0, 320, 480);
 		}
 	};
 

@@ -13,10 +13,12 @@ define([
 				this.model.on('change', function(e) {
 					self.changeDrawState(e.changed.type);
 				});
+				this.action = params.action;
 			},
 			touchEndHandler : function() {
 				this.changeBtnClass(true);
 				this.model.set('type', this.name);
+				this.action && this.action();
 			},
 			changeDrawState: function(str) {
 				if(this.name !== str) {

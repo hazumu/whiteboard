@@ -9,11 +9,14 @@ define([
 		model : Path,
 		counter : 0,
 		initialize : function() {
-
+			this.on('reset', this._resetHandler.bind(this));
 		},
 		add : function(obj) {
 			this.counter++;
 			Backbone.Collection.prototype.add.call(this, obj);
+		},
+		_resetHandler: function() {
+			this.counter = 0;
 		}
 	});
 

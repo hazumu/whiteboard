@@ -42,7 +42,13 @@ define([
 			toolBtns = new Tools({
 				el : '.tools-container',
 				model : drawState,
-				collection : pathCollection
+				collection : pathCollection,
+				canvas: canvas
+			});
+			toolBtns.addEventListener('TOUCH_CLEAR', function() {
+				canvas.clear();
+				pathCollection.reset();
+				console.log(pathCollection.length);
 			});
 		},
 		handleEvent : function(e) {

@@ -1,16 +1,19 @@
 define([
 	'jquery',
+	'eventdispatcher',
 	'app/view/View',
 	'app/view/DrawTool',
 	'app/view/FuncTool',
 	'app/view/Button'
-	], function($, View, DrawTool, FuncTool, Button) {
+	], function($, EventDispatcher, View, DrawTool, FuncTool, Button) {
 		var Tools = View.extend({
-			initialize : function() {
+			initialize : function(params) {
 				var self = this;
+				this.canvas= params.canvas;
 				this.btnsElm = this.$('.btn-container');
 				this.opneBtnElm = this.$('.btn-tools-open');
 				this.collection.on('add', this._updateFuncBtns.bind(this));
+				this.collection.on('reset', this._updateFuncBtns.bind(this));
 				this._btnInit();
 				this._updateFuncBtns();
 			},
@@ -25,6 +28,7 @@ define([
 				this.btnsElm.hide();
 			},
 			_btnInit : function() {
+				var self = this;
 				this.penciBtnl = new DrawTool({
 					name : 'pencil',
 					el : '#pencil-btn',
@@ -55,7 +59,10 @@ define([
 				});
 				this.clearBtn = new FuncTool({
 					name : 'clear',
-					el : '#clear-btn'
+					el : '#clear-btn',
+					action: function() {
+						self.dispatchEvent('TOUCH_CLEAR');
+					}
 				});
 				this.saveBtn = new FuncTool({
 					name : 'save',
@@ -71,8 +78,12 @@ define([
 
 				if (n) {
 					this.undoBtn.enable();
+					this.clearBtn.enable();
+					this.saveBtn.enable();
 				}else {
 					this.undoBtn.disable();
+					this.clearBtn.disable();
+					this.saveBtn.disable();
 				}
 
 				if (this.collection.counter === n) {
@@ -82,6 +93,8 @@ define([
 				}
 			}
 		});
+
+		EventDispatcher.initialize(Tools.prototype);
 
 		return Tools;
 });
