@@ -48,7 +48,6 @@ define([
 			toolBtns.addEventListener('TOUCH_CLEAR', function() {
 				canvas.clear();
 				pathCollection.reset();
-				console.log(pathCollection.length);
 			});
 		},
 		handleEvent : function(e) {

@@ -15,8 +15,10 @@ define(["jquery"], function($) {
 		},
 		drawLine : function(fromx, fromy, tox, toy) {
 			var ctx = canvas.ctx;
+			ctx.beginPath();
 			ctx.moveTo(fromx, fromy);
 			ctx.lineTo(tox, toy);
+			ctx.closePath();
 			ctx.stroke();
 		},
 		addImage: function() {
