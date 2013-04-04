@@ -1,8 +1,8 @@
 define([
 	'jquery',
 	'/socket.io/socket.io.js',
-	'app/socket',
-	'app/canvas',
+	'app/module/socket',
+	'app/module/canvas',
 	'app/model/DrawState',
 	'app/collection/Paths',
 	'app/view/Tools'
