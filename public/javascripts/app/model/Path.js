@@ -6,8 +6,7 @@ define([
 
 	var Path = Backbone.Model.extend({
 		default: {
-			startPos : undefined,
-			endPos : undefined,
+			paths : undefined,
 			color : undefined,
 			thickness : undefined,
 			type : undefined

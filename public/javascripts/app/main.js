@@ -37,6 +37,9 @@ define([
 			// save
 			$('#saveBtn').on('click', $.proxy(this.save, this));
 
+			app.toolInit();
+		},
+		toolInit: function() {
 			drawState = new DrawState();
 			pathCollection = new Paths();
 			toolBtns = new Tools({
@@ -45,21 +48,33 @@ define([
 				collection : pathCollection,
 				canvas: canvas
 			});
-			toolBtns.addEventListener('TOUCH_CLEAR', function() {
+			toolBtns.addEventListener(Tools.TOUCH_CLEAR, function() {
 				canvas.clear();
 				pathCollection.reset();
+			});
+			toolBtns.addEventListener(Tools.TOUCH_UNDO, function(e) {
+				pathCollection.pop();
+				canvas.undo(pathCollection.models);
+			});
+			toolBtns.addEventListener(Tools.TOUCH_REDO, function() {
+				canvas.redo();
+			});
+			toolBtns.addEventListener(Tools.TOUCH_SAVE, function() {
+				canvas.save();
 			});
 		},
 		handleEvent : function(e) {
 			var action;
 			e.preventDefault();
 			canvas.element.addEventListener(EVT.start, app, false);
+			
 			switch (e.type) {
 				case EVT.start:
 					action = 'start';
 					app.isDrow = true;
-					app.pastX = canvas.getPosX(e);
-					app.pastY = canvas.getPosY(e);
+					app.pathDataList = [];
+					app.pastX = app.startX =canvas.getPosX(e);
+					app.pastY = app.startY = canvas.getPosY(e);
 					canvas.element.addEventListener(EVT.move, app, false);
 					canvas.element.addEventListener(EVT.end, app, false);
 					break;
@@ -75,8 +90,7 @@ define([
 					canvas.element.removeEventListener(EVT.move, app, false);
 					canvas.element.removeEventListener(EVT.end, app, false);
 					pathCollection.add({
-						startPos : {x:app.pastX, y: app.pastY},
-						endPos : {x: canvas.getPosX(e), y: canvas.getPosY(e)},
+						paths : app.pathDataList,
 						color : '#000',
 						thickness : '1',
 						type : 'pencil'
@@ -85,16 +99,26 @@ define([
 				default :
 					break;
 			}
+			var endX = canvas.getPosX(e),
+				endY = canvas.getPosY(e);
+
+			app.pathDataList.push({
+				startX: app.pastX,
+				startY: app.pastY,
+				endX: endX,
+				endY: endY
+			})
 
 			if(e.type !== EVT.start) {
 				canvas.drawLine(
 					app.pastX,
 					app.pastY,
-					canvas.getPosX(e),
-					canvas.getPosY(e)
+					endX,
+					endY
 				);
-				app.pastX = canvas.getPosX(e);
-				app.pastY = canvas.getPosY(e);
+				
+				app.pastX = endX;
+				app.pastY = endY;
 			}
 			socket.sendData({
 				action : action,

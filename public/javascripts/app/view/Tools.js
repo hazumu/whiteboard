@@ -18,13 +18,17 @@ define([
 				this._updateFuncBtns();
 			},
 			events : {
-				'click .btn-tools-close' : 'closeTools',
-				'click .btn-tools-open' : 'openTools'
+				'click .btn-tools-close' : '_closeTools',
+				'click .btn-tools-open' : '_openTools',
+				'click #clear-btn' : '_clearHandler',
+				'click #undo-btn' : '_undoHandler',
+				'click #redo-btn' : '_redoHandler',
+				'click #save-btn' : '_saveHandler'
 			},
-			openTools : function() {
+			_openTools : function() {
 				this.btnsElm.show();
 			},
-			closeTools : function() {
+			_closeTools : function() {
 				this.btnsElm.hide();
 			},
 			_btnInit : function() {
@@ -59,10 +63,7 @@ define([
 				});
 				this.clearBtn = new FuncTool({
 					name : 'clear',
-					el : '#clear-btn',
-					action: function() {
-						self.dispatchEvent('TOUCH_CLEAR');
-					}
+					el : '#clear-btn'
 				});
 				this.saveBtn = new FuncTool({
 					name : 'save',
@@ -75,7 +76,7 @@ define([
 			},
 			_updateFuncBtns: function(e) {
 				var n = this.collection.length;
-
+				// console.log(n, e.attributes);
 				if (n) {
 					this.undoBtn.enable();
 					this.clearBtn.enable();
@@ -91,7 +92,24 @@ define([
 				}else {
 					this.redoBtn.enable();
 				}
+			},
+			_clearHandler: function() {
+				this.dispatchEvent(Tools.TOUCH_CLEAR);
+			},
+			_undoHandler: function(e) {
+				this.dispatchEvent(Tools.TOUCH_UNDO);
+			},
+			_redoHandler: function() {
+				this.dispatchEvent(Tools.TOUCH_REDO);
+			},
+			_saveHandler: function() {
+				this.dispatchEvent(Tools.TOUCH_SAVE);
 			}
+		},{
+			TOUCH_CLEAR : 'TOUCH_CLEAR',
+			TOUCH_UNDO : 'TOUCH_UNDO',
+			TOUCH_REDO : 'TOUCH_REDO',
+			TOUCH_SAVE : 'TOUCH_SAVE'
 		});
 
 		EventDispatcher.initialize(Tools.prototype);
