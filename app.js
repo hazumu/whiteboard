@@ -38,6 +38,7 @@ app.configure('development', function(){
 
 // model
 var RoomProvider = require('./models/roomprovider').RoomProvider;
+var UserProvider = require('./models/userprovider').UserProvider;
 
 // index
 app.get('/', ensureAuthenticated, routes.index);
@@ -82,7 +83,6 @@ app.get('/logout', function(req, res){
 	res.redirect('/');
 });
 
-
 server = http.createServer(app);
 server.listen(app.get('port'), function(){
 	console.log("Express server listening on port " + app.get('port'));
@@ -110,20 +110,28 @@ io.sockets.on('connection', function(socket) {
 	});
 });
 
-
-// ここからtwitter認証
+// twitter認証
 var TWITTER_CONSUMER_KEY = "jUFkxa7JCwObA1gLn2d1cA";
 var TWITTER_CONSUMER_SECRET = "Kitndv0bBmHyZjqt9BdEeuIsPt8Q8gi51CWGRrHP54";
 
 passport.use(new twitterStrategy({
 		consumerKey: TWITTER_CONSUMER_KEY,
 		consumerSecret: TWITTER_CONSUMER_SECRET,
+		// ToDo: herokuのurlに直したい
 		callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
 	},
 	function(token, tokenSecret, profile, done) {
 		passport.session.accessToken = token;
 		passport.session.profile = profile;
 		process.nextTick(function () {
+			// ユーザー情報をローカルに保存する
+			console.log(profile);
+			UserProvider.save({
+				uid:           profile.id,
+				user_name:     profile.username,
+				access_token:  token,
+				access_secret: tokenSecret
+			});
 			return done(null, profile);
 	});
 }));
