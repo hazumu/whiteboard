@@ -48,18 +48,21 @@ define([
 				collection : pathCollection,
 				canvas: canvas
 			});
-			toolBtns.addEventListener(Tools.TOUCH_CLEAR, function() {
+			toolBtns.on(Tools.TOUCH_CLEAR, function() {
 				canvas.clear();
 				pathCollection.reset();
 			});
-			toolBtns.addEventListener(Tools.TOUCH_UNDO, function(e) {
-				pathCollection.pop();
+			toolBtns.on(Tools.TOUCH_UNDO, function(e) {
+				pathCollection.undo();
 				canvas.undo(pathCollection.models);
+				pathCollection.trigger('change');
 			});
-			toolBtns.addEventListener(Tools.TOUCH_REDO, function() {
-				canvas.redo();
+			toolBtns.on(Tools.TOUCH_REDO, function() {
+				pathCollection.redo();
+				canvas.redo(pathCollection.models);
+				pathCollection.trigger('change');
 			});
-			toolBtns.addEventListener(Tools.TOUCH_SAVE, function() {
+			toolBtns.on(Tools.TOUCH_SAVE, function() {
 				canvas.save();
 			});
 		},
@@ -67,7 +70,6 @@ define([
 			var action;
 			e.preventDefault();
 			canvas.element.addEventListener(EVT.start, app, false);
-			
 			switch (e.type) {
 				case EVT.start:
 					action = 'start';
@@ -89,6 +91,7 @@ define([
 					app.isDrow = false;
 					canvas.element.removeEventListener(EVT.move, app, false);
 					canvas.element.removeEventListener(EVT.end, app, false);
+
 					pathCollection.add({
 						paths : app.pathDataList,
 						color : '#000',
@@ -101,6 +104,7 @@ define([
 			}
 			var endX = canvas.getPosX(e),
 				endY = canvas.getPosY(e);
+
 
 			app.pathDataList.push({
 				startX: app.pastX,

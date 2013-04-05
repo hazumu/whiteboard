@@ -19,7 +19,6 @@ define(["jquery"], function($) {
 				paths, p, j, jLen;
 			for(; i < len; i++){
 				paths = pathDataList[i].attributes.paths;
-				console.log(paths);
 				j = 0;
 				jLen = paths.length;
 				for(; j < jLen; j++){
@@ -41,18 +40,22 @@ define(["jquery"], function($) {
 			var ctx = canvas.ctx;
 			var image = new Image();
 			image.onload = $.proxy(function() {
-				console.log(window.bitmapData);
-				console.log(ctx);
 				ctx.drawImage(image, 0, 0);
 			}, this);
 			image.src = window.bitmapData;
+		},
+		draw: function(models) {
+			this.clear();
+			this.render(models);
 		},
 		clear: function() {
 			canvas.ctx.clearRect(0, 0, 320, 480);
 		},
 		undo: function(models) {
-			this.clear();
-			this.render(models);
+			canvas.draw(models);
+		},
+		redo: function(models) {
+			canvas.draw(models);
 		},
 		getPosX :function(data) {
 			return data.x || data.offsetX || data.changedTouches[0].clientX - data.changedTouches[0].target.offsetLeft;

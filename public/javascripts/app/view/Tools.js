@@ -1,11 +1,10 @@
 define([
 	'jquery',
-	'eventdispatcher',
 	'app/view/View',
 	'app/view/DrawTool',
 	'app/view/FuncTool',
 	'app/view/Button'
-	], function($, EventDispatcher, View, DrawTool, FuncTool, Button) {
+	], function($, View, DrawTool, FuncTool, Button) {
 		var Tools = View.extend({
 			initialize : function(params) {
 				var self = this;
@@ -13,6 +12,7 @@ define([
 				this.btnsElm = this.$('.btn-container');
 				this.opneBtnElm = this.$('.btn-tools-open');
 				this.collection.on('add', this._updateFuncBtns.bind(this));
+				this.collection.on('change', this._updateFuncBtns.bind(this));
 				this.collection.on('reset', this._updateFuncBtns.bind(this));
 				this._btnInit();
 				this._updateFuncBtns();
@@ -87,23 +87,23 @@ define([
 					this.saveBtn.disable();
 				}
 
-				if (this.collection.counter === n) {
-					this.redoBtn.disable();
-				}else {
+				if (this.collection.pathHistory.length) {
 					this.redoBtn.enable();
+				}else {
+					this.redoBtn.disable();
 				}
 			},
 			_clearHandler: function() {
-				this.dispatchEvent(Tools.TOUCH_CLEAR);
+				this.trigger(Tools.TOUCH_CLEAR);
 			},
 			_undoHandler: function(e) {
-				this.dispatchEvent(Tools.TOUCH_UNDO);
+				this.trigger(Tools.TOUCH_UNDO);
 			},
 			_redoHandler: function() {
-				this.dispatchEvent(Tools.TOUCH_REDO);
+				this.trigger(Tools.TOUCH_REDO);
 			},
 			_saveHandler: function() {
-				this.dispatchEvent(Tools.TOUCH_SAVE);
+				this.trigger(Tools.TOUCH_SAVE);
 			}
 		},{
 			TOUCH_CLEAR : 'TOUCH_CLEAR',
@@ -111,8 +111,6 @@ define([
 			TOUCH_REDO : 'TOUCH_REDO',
 			TOUCH_SAVE : 'TOUCH_SAVE'
 		});
-
-		EventDispatcher.initialize(Tools.prototype);
 
 		return Tools;
 });
