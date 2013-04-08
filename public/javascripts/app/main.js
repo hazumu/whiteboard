@@ -60,7 +60,6 @@ define([
 			toolBtns.on(Tools.TOUCH_REDO, function() {
 				pathCollection.redo();
 				canvas.redo(pathCollection.models);
-				pathCollection.trigger('change');
 			});
 			toolBtns.on(Tools.TOUCH_SAVE, function() {
 				canvas.save();
@@ -97,7 +96,7 @@ define([
 						color : '#000',
 						thickness : '1',
 						type : 'pencil'
-					});
+					}, true);
 					break;
 				default :
 					break;
