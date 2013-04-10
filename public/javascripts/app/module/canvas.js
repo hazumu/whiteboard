@@ -1,4 +1,7 @@
 define(["jquery"], function($) {
+	var drawParams = {
+		type : ""
+	};
 	/*
 	// canvasオブジェクト
 	*/
@@ -65,6 +68,9 @@ define(["jquery"], function($) {
 		},
 		getDataUrl: function() {
 			return canvas.element.toDataURL('image/png');
+		},
+		setDrawType: function(name) {
+			drawParams.type = name;
 		}
 	};
 

@@ -23,7 +23,8 @@ define([
 				'click #clear-btn' : '_clearHandler',
 				'click #undo-btn' : '_undoHandler',
 				'click #redo-btn' : '_redoHandler',
-				'click #save-btn' : '_saveHandler'
+				'click #save-btn' : '_saveHandler',
+				'click #pencil-btn' : '_pencilBtnHandler'
 			},
 			_openTools : function() {
 				this.btnsElm.show();
@@ -33,7 +34,7 @@ define([
 			},
 			_btnInit : function() {
 				var self = this;
-				this.penciBtnl = new DrawTool({
+				this.penciBtn = new DrawTool({
 					name : 'pencil',
 					el : '#pencil-btn',
 					model : this.model
@@ -104,12 +105,16 @@ define([
 			},
 			_saveHandler: function() {
 				this.trigger(Tools.TOUCH_SAVE);
+			},
+			_pencilBtnHandler: function() {
+				this.trigger(Tools.TOUCH_PENCIL, this.penciBtn);
 			}
 		},{
 			TOUCH_CLEAR : 'TOUCH_CLEAR',
 			TOUCH_UNDO : 'TOUCH_UNDO',
 			TOUCH_REDO : 'TOUCH_REDO',
-			TOUCH_SAVE : 'TOUCH_SAVE'
+			TOUCH_SAVE : 'TOUCH_SAVE',
+			TOUCH_PENCIL : 'TOUCH_PENCIL'
 		});
 
 		return Tools;
