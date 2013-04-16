@@ -3,10 +3,9 @@ define([
 	'/socket.io/socket.io.js',
 	'app/module/socket',
 	'app/module/canvas',
-	'app/model/DrawState',
 	'app/collection/Paths',
 	'app/view/Tools'
-], function($, io, socket, canvas, DrawState, Paths, Tools) {
+], function($, io, socket, canvas, Paths, Tools) {
 	var toolBtns, pathCollection, drawState;
 	var EVT = 'ontouchend' in window.document ? {
 		start : 'touchstart',
@@ -40,11 +39,9 @@ define([
 			app.toolInit();
 		},
 		toolInit: function() {
-			drawState = new DrawState();
 			pathCollection = new Paths();
 			toolBtns = new Tools({
 				el : '.tools-container',
-				model : drawState,
 				collection : pathCollection,
 				canvas: canvas
 			});
@@ -65,7 +62,6 @@ define([
 				canvas.save();
 			});
 			toolBtns.on(Tools.CHANGE_TOOL_TYPE, function(name) {
-				drawState.set("type", name);
 				canvas.setDrawType(name);
 			});
 		},

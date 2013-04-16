@@ -1,10 +1,8 @@
 define([
 	'jquery',
 	'app/view/View',
-	'app/view/DrawTool',
-	'app/view/FuncTool',
 	'app/view/Button'
-	], function($, View, DrawTool, FuncTool, Button) {
+	], function($, View, Button) {
 		var Tools = View.extend({
 			drawBtns: undefined,
 			funcBtns: undefined,
@@ -16,7 +14,6 @@ define([
 				this.collection.on('add', this._updateFuncBtns.bind(this));
 				this.collection.on('change', this._updateFuncBtns.bind(this));
 				this.collection.on('reset', this._updateFuncBtns.bind(this));
-				this.model.on("change", this._updateDrawBtns.bind(this));
 				this._btnInit();
 				this._updateFuncBtns();
 			},
@@ -92,7 +89,7 @@ define([
 					this.funcBtns['redo'].disable();
 				}
 			},
-			_updateDrawBtns:function(model) {
+			_updateDrawBtns:function(name) {
 				var i = 0,
 					keys = Object.keys(this.drawBtns),
 					len = keys.length,
@@ -100,7 +97,7 @@ define([
 
 				for(; i < len; i++){
 					t = this.drawBtns[keys[i]];
-					if (t.name === model.get('type')) {
+					if (t.name === name) {
 						t.select();
 					}else {
 						t.notSelect();
@@ -122,6 +119,7 @@ define([
 			_changeTypeHandler: function(e) {
 				var name = e.target.instance ? e.target.instance.name: false;
 				if (name) {
+					this._updateDrawBtns(name);
 					this.trigger(Tools.CHANGE_TOOL_TYPE, name);
 				}
 			}
