@@ -64,8 +64,9 @@ define([
 			toolBtns.on(Tools.TOUCH_SAVE, function() {
 				canvas.save();
 			});
-			toolBtns.on(Tools.TOUCH_PENCIL, function(e) {
-				canvas.setDrawType(e.name);
+			toolBtns.on(Tools.CHANGE_TOOL_TYPE, function(name) {
+				drawState.set("type", name);
+				canvas.setDrawType(name);
 			});
 		},
 		handleEvent : function(e) {

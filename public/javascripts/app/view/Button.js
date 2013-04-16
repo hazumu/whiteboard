@@ -6,7 +6,9 @@ define([
 		var Button = View.extend({
 			name : "none",
 			isDisable : false,
-			initialize : function() {
+			initialize : function(params) {
+				this.name = params.name;
+				this.$el[0].instance = this;
 			},
 			touchStartHandler : function() {
 				if(!this.isDisable) {
@@ -35,6 +37,12 @@ define([
 				this.$el.addClass(Button.CN_DISABLED);
 			},
 			touchEndHandler : function() {
+				this.changeBtnClass(false);
+			},
+			select : function() {
+				this.changeBtnClass(true);
+			},
+			notSelect : function() {
 				this.changeBtnClass(false);
 			}
 		}, {

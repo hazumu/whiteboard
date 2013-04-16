@@ -1,6 +1,8 @@
 define(["jquery"], function($) {
 	var drawParams = {
-		type : ""
+		type : "pencil",
+		color : "",
+		thickness: ""
 	};
 	/*
 	// canvasオブジェクト
@@ -15,11 +17,13 @@ define(["jquery"], function($) {
 			if (window.bitmapData !== '') {
 				this.addImage();
 			}
+			canvas.updateDrawParams();
 		},
-		render: function(pathDataList) {
+		draw: function(pathDataList) {
 			var i = 0,
 				len = pathDataList.length,
 				paths, p, j, jLen;
+			this.clear();
 			for(; i < len; i++){
 				paths = pathDataList[i].attributes.paths;
 				j = 0;
@@ -34,6 +38,8 @@ define(["jquery"], function($) {
 			
 			var ctx = canvas.ctx;
 			ctx.beginPath();
+			ctx.strokeStyle = drawParams.color;
+			ctx.lineWidth = drawParams.thickness;
 			ctx.moveTo(fromx, fromy);
 			ctx.lineTo(tox, toy);
 			ctx.closePath();
@@ -46,10 +52,6 @@ define(["jquery"], function($) {
 				ctx.drawImage(image, 0, 0);
 			}, this);
 			image.src = window.bitmapData;
-		},
-		draw: function(models) {
-			this.clear();
-			this.render(models);
 		},
 		clear: function() {
 			canvas.ctx.clearRect(0, 0, 320, 480);
@@ -71,6 +73,19 @@ define(["jquery"], function($) {
 		},
 		setDrawType: function(name) {
 			drawParams.type = name;
+			canvas.updateDrawParams();
+		},
+		updateDrawParams: function() {
+			switch (drawParams.type) {
+				case "pencil":
+					drawParams.color = "#000";
+					drawParams.thickness = 10;
+					break;
+				case "eraser":
+					drawParams.color = "#fff";
+					drawParams.thickness = 10;
+					break;
+			}
 		}
 	};
 
