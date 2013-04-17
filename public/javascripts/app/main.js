@@ -3,9 +3,10 @@ define([
 	'/socket.io/socket.io.js',
 	'app/module/socket',
 	'app/module/canvas',
+	'app/module/storage',
 	'app/collection/Paths',
 	'app/view/Tools'
-], function($, io, socket, canvas, Paths, Tools) {
+], function($, io, socket, canvas, storage, Paths, Tools) {
 	var toolBtns, pathCollection, drawState;
 	var EVT = 'ontouchend' in window.document ? {
 		start : 'touchstart',
