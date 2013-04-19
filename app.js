@@ -26,8 +26,12 @@ app.configure(function(){
 });
 
 passport.serializeUser(function(user, done){
-	done(null, user);
+	done(null, {
+		id: user.id,
+		user_name: user.username
+	});
 });
+
 passport.deserializeUser(function(obj, done){
 	done(null, obj);
 });
@@ -125,7 +129,6 @@ passport.use(new twitterStrategy({
 		passport.session.profile = profile;
 		process.nextTick(function () {
 			// ユーザー情報をローカルに保存する
-			console.log(profile);
 			UserProvider.save({
 				uid:           profile.id,
 				user_name:     profile.username,
