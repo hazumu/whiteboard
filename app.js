@@ -45,7 +45,7 @@ var RoomProvider = require('./models/roomprovider').RoomProvider;
 var UserProvider = require('./models/userprovider').UserProvider;
 
 // index
-app.get('/', routesIndex.index);
+app.get('/', ensureAuthenticated, routes.index);
 
 // ルーム画面
 app.get('/room/:id', routesRoom.room);
