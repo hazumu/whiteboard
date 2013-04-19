@@ -89,6 +89,16 @@ app.post('/room_save', function(req, res, next) {
 	*/
 });
 
+// セッション
+app.get('/login', function(req, res) {
+		res.render('login');
+})
+
+app.get('/logout', function(req, res){
+	req.logout();
+	res.redirect('/');
+});
+
 server = http.createServer(app);
 server.listen(app.get('port'), function(){
 	console.log("Express server listening on port " + app.get('port'));
