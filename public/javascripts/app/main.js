@@ -125,10 +125,10 @@ define([
 				app.pastY = endY;
 			}
 			socket.sendData({
-				action : action,
-				x : canvas.getPosX(e),
-				y : canvas.getPosY(e),
-				id : app.clientId
+				paths : app.pathDataList,
+				color : '#000',
+				thickness : '1',
+				type : 'pencil'
 			});
 		},
 		onSocketData :function(e, data) {
