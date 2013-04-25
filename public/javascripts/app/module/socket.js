@@ -1,4 +1,4 @@
-define(["jquery"], function($) {
+define(["jquery", '/socket.io/socket.io.js'], function($, io) {
 	var socket = {
 		ON_SOCKET_DATA : 'ON_SOCKET_DATA',
 		ON_NEW_CONNECT : 'ON_NEW_CONNECT',

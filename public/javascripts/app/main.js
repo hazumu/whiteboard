@@ -1,14 +1,12 @@
 define([
 	'jquery',
-	'/socket.io/socket.io.js',
 	'app/module/socket',
 	'app/module/canvas',
 	'app/module/storage',
 	'app/collection/Paths',
 	'app/view/Tools',
-	'app/view/Cursor',
-], function($, io, socket, canvas, storage, Paths, Tools, Cursor) {
-	var toolBtns, pathCollection, drawState, cursor;
+	'app/view/Cursor'
+], function($, socket, canvas, storage, Paths, Tools, Cursor) {
 	var EVT = 'ontouchend' in window.document ? {
 		start : 'touchstart',
 		move : 'touchmove',
@@ -20,19 +18,24 @@ define([
 	};
 
 	var app = {
+		CANVAS : 'canvas',
+		CURSOR : 'cursor',
+		connectIdElm: null,
+		pathCollection: null,
+		toolBtns: null,
+		cursor: null,
+		clientId : 'id' + Math.round($.now()*Math.random()),
+		isDrow : false,
+		pastX : 0,
+		pastY : 0,
+		clients : {},
+		tapInterval : 0,
+		switchInterval : 1000,
+		outputType: "",
 		init: function() {
-			app.CANVAS = 'canvas';
-			app.CURSOR = 'cursor';
-			app.clientId = 'id' + Math.round($.now()*Math.random());
-			app.isDrow = false;
-			app.pastX = 0;
-			app.pastY = 0;
 			app.connectIdElm = $('#connectId');
-			app.clients = {};
-			app.tapInterval = 0;
-			app.switchInterval = 1000;
-			app.outputType = app.CURSOR;
-			pathCollection = new Paths();
+			app.pathCollection = new Paths();
+			outputType = app.CURSOR;
 
 			socket.init();
 			$(window).on(socket.ON_SOCKET_DATA, app.onSocketData);
@@ -41,37 +44,37 @@ define([
 			canvas.init();
 			canvas.element.addEventListener(EVT.start, this, false);
 
-			cursor = new Cursor({
-				collection : pathCollection
+			app.cursor = new Cursor({
+				collection : app.pathCollection
 			});
+
 			// save
 			$('#saveBtn').on('click', $.proxy(this.save, this));
 
 			app.toolInit();
 		},
 		toolInit: function() {
-			toolBtns = new Tools({
-				el : '.tools-container',
-				collection : pathCollection,
+			app.toolBtns = new Tools({
+				collection : app.pathCollection,
 				canvas: canvas
 			});
-			toolBtns.on(Tools.TOUCH_CLEAR, function() {
+			app.toolBtns.on(Tools.TOUCH_CLEAR, function() {
 				canvas.clear();
-				pathCollection.reset();
+				app.pathCollection.reset();
 			});
-			toolBtns.on(Tools.TOUCH_UNDO, function(e) {
-				pathCollection.undo();
-				canvas.undo(pathCollection.models);
-				pathCollection.trigger('change');
+			app.toolBtns.on(Tools.TOUCH_UNDO, function(e) {
+				app.pathCollection.undo();
+				canvas.undo(app.pathCollection.models);
+				app.pathCollection.trigger('change');
 			});
-			toolBtns.on(Tools.TOUCH_REDO, function() {
-				pathCollection.redo();
-				canvas.redo(pathCollection.models);
+			app.toolBtns.on(Tools.TOUCH_REDO, function() {
+				app.pathCollection.redo();
+				canvas.redo(app.pathCollection.models);
 			});
-			toolBtns.on(Tools.TOUCH_SAVE, function() {
+			app.toolBtns.on(Tools.TOUCH_SAVE, function() {
 				canvas.save();
 			});
-			toolBtns.on(Tools.CHANGE_TOOL_TYPE, function(name) {
+			app.toolBtns.on(Tools.CHANGE_TOOL_TYPE, function(name) {
 				canvas.setDrawType(name);
 			});
 		},
@@ -102,7 +105,7 @@ define([
 		// 			canvas.element.removeEventListener(EVT.move, app, false);
 		// 			canvas.element.removeEventListener(EVT.end, app, false);
 
-		// 			pathCollection.add({
+		// 			app.pathCollection.add({
 		// 				paths : app.pathDataList,
 		// 				color : '#000',
 		// 				thickness : '1',
@@ -141,81 +144,90 @@ define([
 		// 		type : 'pencil'
 		// 	});
 		// },
-		handleEvent : function(e) {
-			var action;
-			e.preventDefault();
+		handleEvent : function(event) {
+			event.preventDefault();
 			
-			console.log('-----------------------------');
-			switch (e.type) {
+			switch (event.type) {
 				case EVT.start:
-					action = 'start';
 					app.isDrow = true;
-					app.pathDataList = [];
-					app.pastX = app.startX =canvas.getPosX(e);
-					app.pastY = app.startY = canvas.getPosY(e);
-					document.addEventListener(EVT.move, app, false);
-					document.addEventListener(EVT.end, app, false);
-
-					if (app.tapInterval === 0) {
-						app.outputType = app.CURSOR;
-						cursor.show();
-					}else {
-						app.tapInterval = +new Date - app.tapInterval;
-						if (app.tapInterval < app.switchInterval) {
-							app.outputType = app.CANVAS;
-						}else {
-							app.outputType = app.CURSOR;
-							cursor.show();
-						}
-					}
-					console.log("type=", app.outputType);
+					app.startHandler(event);
 
 					break;
 				case EVT.move:
-					action = 'move';
 					if(!app.isDrow) return;
-					e.preventDefault();
+
 					break;
 				case EVT.end:
-					action = 'end';
 					if(!app.isDrow) return;
 					app.isDrow = false;
-					document.removeEventListener(EVT.move, app, false);
-					document.removeEventListener(EVT.end, app, false);
+					app.endHandler(event);
 
-					pathCollection.add({
-						paths : app.pathDataList,
-						color : '#000',
-						thickness : '1',
-						type : 'pencil'
-					}, true);
-
-					cursor.hide();
-					app.tapInterval = +new Date;
-
-					//バグありそう
-					setTimeout(function() {
-						app.tapInterval = 0;
-					}, app.switchInterval);
 					break;
 				default :
 					break;
 			}
-			var endX = canvas.getPosX(e),
-				endY = canvas.getPosY(e);
 
+			app.drawHandler(event);
+		},
+		startHandler: function(event) {
+			app.pathDataList = [];
+			app.pastX = canvas.getPosX(event);
+			app.pastY = canvas.getPosY(event);
+			document.addEventListener(EVT.move, app, false);
+			document.addEventListener(EVT.end, app, false);
+
+			if (app.tapInterval === 0) {
+				app.outputType = app.CURSOR;
+				app.cursor.show();
+			}else {
+				app.tapInterval = +new Date - app.tapInterval;
+				if (app.tapInterval < app.switchInterval) {
+					app.outputType = app.CANVAS;
+				}else {
+					app.outputType = app.CURSOR;
+					app.cursor.show();
+				}
+			}
+		},
+		endHandler: function(event) {
+			document.removeEventListener(EVT.move, app, false);
+			document.removeEventListener(EVT.end, app, false);
+
+			if (app.outputType === app.CURSOR) {
+				app.cursor.hide();	
+			}else if (app.outputType === app.CANVAS){
+				//タッチスタートからタッチエンドまでのパス情報をコレクションに追加
+				app.pathCollection.add({
+					paths : app.pathDataList,
+					color : '#000',
+					thickness : '1',
+					type : 'pencil'
+				}, true);
+			}
+			
+			app.tapInterval = +new Date;
+
+			//一定時間たったらoutputTypeをCURSORにするための処理 ※バグありそう
+			setTimeout(function() {
+				app.tapInterval = 0;
+			}, app.switchInterval);
+		},
+		drawHandler: function(event) {
+			var endX = canvas.getPosX(event),
+				endY = canvas.getPosY(event);
 
 			app.pathDataList.push({
 				startX: app.pastX,
 				startY: app.pastY,
 				endX: endX,
 				endY: endY
-			})
+			});
 
 			if (app.outputType === app.CURSOR) {
-				cursor.position(endX, endY);
+				app.cursor.position(endX, endY);
+
 			}else if (app.outputType === app.CANVAS) {
-				if(e.type !== EVT.start) {
+				if(event.type !== EVT.start) {
 					canvas.drawLine(
 						app.pastX,
 						app.pastY,
@@ -242,7 +254,7 @@ define([
 			var url = '/room_save';
 
 			var data = canvas.getDataUrl(),
-					id = $(e.target).data('id');
+				id = $(e.target).data('id');
 
 			$.ajax({
 				type: 'POST',
