@@ -1,12 +1,14 @@
-var express         = require('express'),
-		mongoose        = require('mongoose'),
-		routes          = require('./routes'),
-		routesRoom      = require('./routes/room'),
-		http            = require('http'),
-		path            = require('path'),
-		passport        = require('passport'),
-		twitterStrategy = require('passport-twitter').Strategy,
-		app             = express();
+var express              = require('express'),
+		mongoose         = require('mongoose'),
+		routes           = require('./routes'),
+		routesRoom       = require('./routes/room'),
+		routesPen        = require('./routes/pen'),
+		routesWhiteboard = require('./routes/whiteboard'),
+		http             = require('http'),
+		path             = require('path'),
+		passport         = require('passport'),
+		twitterStrategy  = require('passport-twitter').Strategy,
+		app              = express();
 
 app.configure(function(){
 	app.set('port', process.env.PORT || 3000);
@@ -75,23 +77,17 @@ app.post('/room_save', function(req, res, next) {
 	RoomProvider.update(req.body, function() {
 		res.redirect('/');
 	});
-
-	// ルーム名を取得
-	/*
-	var name = req.body.name
-	RoomProvider.save({
-		name: name,
-		bitmapData: ''
-	}, function() {
-		// 保存終了したらリダイレクト
-		res.redirect('/');
-	});
-	*/
 });
+
+// ペン画面
+app.get('/room/:id/pen', routesPen.pen);
+
+// ホワイトボード画面
+app.get('/room/:id/whiteboard', routesWhiteboard.whiteboard);
 
 // セッション
 app.get('/login', function(req, res) {
-		res.render('login');
+	res.render('login');
 })
 
 app.get('/logout', function(req, res){

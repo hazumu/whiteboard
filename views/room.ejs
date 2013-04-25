@@ -8,51 +8,8 @@
 </head>
 <body>
 <div class="wrapper">
-	<canvas height="480" id="canvas"></canvas>
-	<div class="cursor-container invisible">
-		<ul>
-			<li class="cursor">✠</li>
-			<li class="user-info"></li>
-		</ul>
-	</div>
-	<div class="tools-container">
-		<div class="btn-container">
-			<div class="func-tool-container">
-				<ul>
-					<li><button class="" id="undo-btn">UNDO</button></li>
-					<li><button class="" id="redo-btn">REDO</button></li>
-					<li><button class="" id="clear-btn">CLEAR</button></li>
-					<li><button class="" id="save-btn">SAVE</button></li>
-				</ul>
-			</div>
-			<div class="draw-tool-container">
-				<ul>
-					<li><button class="btn-tools-close">✖</button></li>
-					<li><button class="btn-selected" id="pencil-btn">★</button></li>
-					<li><button class="icon-upload-alt" id="eraser-btn">★</button></li>
-					<li><button class="icon-plus-sign" id="color-btn">★</button></li>
-					<li><button class="icon-plus-sign" id="thickness-btn">★</button></li>			
-				</ul>
-			</div>
-		</div>
-		<div class="btn-tools-open">〇</div>
-	</div>
+	<p><a href="/room/<%= id %>/whiteboard">ホワイトボードへ</a></p>
+	<p><a href="/room/<%= id %>/pen">ペンへ</a></p>
 </div>
-<section>
-
-	
-	<ul>
-		<li id="connectId"></li>
-		<li id="type"></li>
-	</ul>
-	<button id="saveBtn" data-id="<%= id %>">保存</button>
-</section>
-<script>
-;(function(window) {
-	window.bitmapData = '<%= bitmapData %>';
-}(window));
-</script>
-
-<script data-main="/javascripts/config" src="/javascripts/vendor/require.js"></script>
 </body>
 </html>
