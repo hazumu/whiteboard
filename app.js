@@ -27,11 +27,9 @@ app.configure(function(){
 	app.use(express.static(path.join(__dirname, 'public')));
 });
 
+// セッションに保持
 passport.serializeUser(function(user, done){
-	done(null, {
-		id: user.id,
-		user_name: user.username
-	});
+	done(null, user);
 });
 
 passport.deserializeUser(function(obj, done){
@@ -50,7 +48,7 @@ var UserProvider = require('./models/userprovider').UserProvider;
 app.get('/', ensureAuthenticated, routes.index);
 
 // ルーム画面
-app.get('/room/:id', routesRoom.room);
+app.get('/room/:id', ensureAuthenticated, routesRoom.room);
 
 // ルーム作成
 app.post('/room_create', function(req, res, next) {
@@ -80,7 +78,7 @@ app.post('/room_save', function(req, res, next) {
 });
 
 // ペン画面
-app.get('/room/:id/pen', routesPen.pen);
+app.get('/room/:id/pen', ensureAuthenticated, routesPen.pen);
 
 // ホワイトボード画面
 app.get('/room/:id/whiteboard', routesWhiteboard.whiteboard);
