@@ -4,6 +4,7 @@ define([
 	'app/view/Button'
 	], function($, View, Button) {
 		var Tools = View.extend({
+			el: '.tools-container',
 			drawBtns: undefined,
 			funcBtns: undefined,
 			initialize : function(params) {
