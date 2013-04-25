@@ -5,9 +5,10 @@ define([
 	'app/module/canvas',
 	'app/module/storage',
 	'app/collection/Paths',
-	'app/view/Tools'
-], function($, io, socket, canvas, storage, Paths, Tools) {
-	var toolBtns, pathCollection, drawState;
+	'app/view/Tools',
+	'app/view/Cursor',
+], function($, io, socket, canvas, storage, Paths, Tools, Cursor) {
+	var toolBtns, pathCollection, drawState, cursor;
 	var EVT = 'ontouchend' in window.document ? {
 		start : 'touchstart',
 		move : 'touchmove',
@@ -20,12 +21,18 @@ define([
 
 	var app = {
 		init: function() {
+			app.CANVAS = 'canvas';
+			app.CURSOR = 'cursor';
 			app.clientId = 'id' + Math.round($.now()*Math.random());
 			app.isDrow = false;
 			app.pastX = 0;
 			app.pastY = 0;
 			app.connectIdElm = $('#connectId');
 			app.clients = {};
+			app.tapInterval = 0;
+			app.switchInterval = 1000;
+			app.outputType = app.CURSOR;
+			pathCollection = new Paths();
 
 			socket.init();
 			$(window).on(socket.ON_SOCKET_DATA, app.onSocketData);
@@ -34,13 +41,15 @@ define([
 			canvas.init();
 			canvas.element.addEventListener(EVT.start, this, false);
 
+			cursor = new Cursor({
+				collection : pathCollection
+			});
 			// save
 			$('#saveBtn').on('click', $.proxy(this.save, this));
 
 			app.toolInit();
 		},
 		toolInit: function() {
-			pathCollection = new Paths();
 			toolBtns = new Tools({
 				el : '.tools-container',
 				collection : pathCollection,
@@ -66,10 +75,77 @@ define([
 				canvas.setDrawType(name);
 			});
 		},
+		// クライアント用
+		// handleEvent : function(e) {
+		// 	var action;
+		// 	e.preventDefault();
+		// 	canvas.element.addEventListener(EVT.start, app, false);
+		// 	switch (e.type) {
+		// 		case EVT.start:
+		// 			action = 'start';
+		// 			app.isDrow = true;
+		// 			app.pathDataList = [];
+		// 			app.pastX = app.startX =canvas.getPosX(e);
+		// 			app.pastY = app.startY = canvas.getPosY(e);
+		// 			canvas.element.addEventListener(EVT.move, app, false);
+		// 			canvas.element.addEventListener(EVT.end, app, false);
+		// 			break;
+		// 		case EVT.move:
+		// 			action = 'move';
+		// 			if(!app.isDrow) return;
+		// 			e.preventDefault();
+		// 			break;
+		// 		case EVT.end:
+		// 			action = 'end';
+		// 			if(!app.isDrow) return;
+		// 			app.isDrow = false;
+		// 			canvas.element.removeEventListener(EVT.move, app, false);
+		// 			canvas.element.removeEventListener(EVT.end, app, false);
+
+		// 			pathCollection.add({
+		// 				paths : app.pathDataList,
+		// 				color : '#000',
+		// 				thickness : '1',
+		// 				type : 'pencil'
+		// 			}, true);
+		// 			break;
+		// 		default :
+		// 			break;
+		// 	}
+		// 	var endX = canvas.getPosX(e),
+		// 		endY = canvas.getPosY(e);
+
+
+		// 	app.pathDataList.push({
+		// 		startX: app.pastX,
+		// 		startY: app.pastY,
+		// 		endX: endX,
+		// 		endY: endY
+		// 	})
+
+		// 	if(e.type !== EVT.start) {
+		// 		canvas.drawLine(
+		// 			app.pastX,
+		// 			app.pastY,
+		// 			endX,
+		// 			endY
+		// 		);
+				
+		// 		app.pastX = endX;
+		// 		app.pastY = endY;
+		// 	}
+		// 	socket.sendData({
+		// 		paths : app.pathDataList,
+		// 		color : '#000',
+		// 		thickness : '1',
+		// 		type : 'pencil'
+		// 	});
+		// },
 		handleEvent : function(e) {
 			var action;
 			e.preventDefault();
-			canvas.element.addEventListener(EVT.start, app, false);
+			
+			console.log('-----------------------------');
 			switch (e.type) {
 				case EVT.start:
 					action = 'start';
@@ -77,8 +153,23 @@ define([
 					app.pathDataList = [];
 					app.pastX = app.startX =canvas.getPosX(e);
 					app.pastY = app.startY = canvas.getPosY(e);
-					canvas.element.addEventListener(EVT.move, app, false);
-					canvas.element.addEventListener(EVT.end, app, false);
+					document.addEventListener(EVT.move, app, false);
+					document.addEventListener(EVT.end, app, false);
+
+					if (app.tapInterval === 0) {
+						app.outputType = app.CURSOR;
+						cursor.show();
+					}else {
+						app.tapInterval = +new Date - app.tapInterval;
+						if (app.tapInterval < app.switchInterval) {
+							app.outputType = app.CANVAS;
+						}else {
+							app.outputType = app.CURSOR;
+							cursor.show();
+						}
+					}
+					console.log("type=", app.outputType);
+
 					break;
 				case EVT.move:
 					action = 'move';
@@ -89,8 +180,8 @@ define([
 					action = 'end';
 					if(!app.isDrow) return;
 					app.isDrow = false;
-					canvas.element.removeEventListener(EVT.move, app, false);
-					canvas.element.removeEventListener(EVT.end, app, false);
+					document.removeEventListener(EVT.move, app, false);
+					document.removeEventListener(EVT.end, app, false);
 
 					pathCollection.add({
 						paths : app.pathDataList,
@@ -98,6 +189,14 @@ define([
 						thickness : '1',
 						type : 'pencil'
 					}, true);
+
+					cursor.hide();
+					app.tapInterval = +new Date;
+
+					//バグありそう
+					setTimeout(function() {
+						app.tapInterval = 0;
+					}, app.switchInterval);
 					break;
 				default :
 					break;
@@ -113,17 +212,21 @@ define([
 				endY: endY
 			})
 
-			if(e.type !== EVT.start) {
-				canvas.drawLine(
-					app.pastX,
-					app.pastY,
-					endX,
-					endY
-				);
-				
-				app.pastX = endX;
-				app.pastY = endY;
+			if (app.outputType === app.CURSOR) {
+				cursor.position(endX, endY);
+			}else if (app.outputType === app.CANVAS) {
+				if(e.type !== EVT.start) {
+					canvas.drawLine(
+						app.pastX,
+						app.pastY,
+						endX,
+						endY
+					);
+					app.pastX = endX;
+					app.pastY = endY;
+				}
 			}
+			
 			socket.sendData({
 				paths : app.pathDataList,
 				color : '#000',

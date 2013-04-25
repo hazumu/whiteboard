@@ -1,3 +1,19 @@
+//mixin
+position(pos = relative, top = false, left = false, right = false, bottom = false, z-index = false, index = false)
+	position pos;
+	if top != false
+		top	top
+	if left != false
+		left	left
+	if right != false
+		right	right
+	if bottom != false
+		bottom	bottom
+	if z-index != false
+		z-index	z-index
+	else if index != false
+		z-index index
+
 body
 	padding 50px
 	font 14px "Lucida Grande", Helvetica, Arial, sans-serif
@@ -33,6 +49,10 @@ fieldset
 	border none
 img 
 	vertical-align bottom
+.visible
+	display block
+.invisible
+	display none
 .wrapper
 	width 320px
 	height 480px
@@ -103,3 +123,6 @@ img
 	border-radius 20px
 	opacity .5
 	line-height 35px
+
+.cursor-container
+	position(absolute, 0, 0)

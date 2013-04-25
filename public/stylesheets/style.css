@@ -88,6 +88,12 @@ fieldset {
 img {
   vertical-align: bottom;
 }
+.visible {
+  display: block;
+}
+.invisible {
+  display: none;
+}
 .wrapper {
   width: 320px;
   height: 480px;
@@ -168,4 +174,9 @@ img {
   border-radius: 20px;
   opacity: 0.5;
   line-height: 35px;
+}
+.cursor-container {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
