@@ -111,7 +111,7 @@ io.sockets.on('connection', function(socket) {
 	// メッセージを受けたときの処理
 	socket.on('message', function(data) {
 		// つながっているクライアント全員に送信
-		console.log("message");
+		console.log("message", data);
 		socket.broadcast.emit('message', { value: data.value });
 	});
 	// クライアントが切断したときの処理

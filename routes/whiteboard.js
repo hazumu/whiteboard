@@ -8,7 +8,6 @@ exports.whiteboard = function(req, res){
 	// コールバックの第二引数のネーミングが謎
 	var list = RoomProvider.findById(req.param('id'), function(err, contact){
 		if (err) throw err;
-		console.log(contact);
 		res.render('whiteboard', {
 			title: contact.name,
 			bitmapData: contact.bitmapData,
