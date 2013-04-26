@@ -1,4 +1,4 @@
-var express              = require('express'),
+var express          = require('express'),
 		mongoose         = require('mongoose'),
 		routes           = require('./routes'),
 		routesRoom       = require('./routes/room'),
@@ -111,7 +111,7 @@ io.sockets.on('connection', function(socket) {
 	// メッセージを受けたときの処理
 	socket.on('message', function(data) {
 		// つながっているクライアント全員に送信
-		console.log("message");
+		console.log("message", data);
 		socket.broadcast.emit('message', { value: data.value });
 	});
 	// クライアントが切断したときの処理
