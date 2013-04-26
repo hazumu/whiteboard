@@ -243,7 +243,11 @@ define([
 				paths : app.pathDataList,
 				color : '#000',
 				thickness : '1',
-				type : 'pencil'
+				type : 'pencil',
+				user : {
+					name : '',
+					img : ''
+				}
 			});
 		},
 		onSocketData :function(e, data) {

@@ -1,5 +1,5 @@
 require.config({
- 	baseUrl : '../javascripts',
+ 	baseUrl : '../../javascripts',
 	shim: {
 		'backbone' : {
 			deps: ['jquery', 'lodash'],
