@@ -32,9 +32,13 @@ define([
 		tapInterval : 0,
 		switchInterval : 1000,
 		outputType: "",
+		userName : "",
+		userImg : "",
 		init: function() {
 			app.connectIdElm = $('#connectId');
 			app.pathCollection = new Paths();
+			app.userName = $('#userName').attr('data-user-name');
+			app.userImg = $('#userImg').attr('data-user-img');
 			outputType = app.CURSOR;
 
 			socket.init();
@@ -250,9 +254,10 @@ define([
 				thickness : '1',
 				type : 'pencil',
 				user : {
-					name : '',
-					img : ''
-				}
+					name : app.userName,
+					img : app.userImg
+				},
+				roomId: 
 			});
 		},
 		onSocketData :function(e, data) {

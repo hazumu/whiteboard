@@ -44,8 +44,8 @@
 		<li id="type"></li>
 	</ul>
 	<button id="saveBtn" data-id="<%= id %>">保存</button>
-	<p><%= userName %></p>
-	<p><img src="<%= userImg %>" /></p>
+	<p data-user-name="<%= userName %>" id="userName"><%= userName %></p>
+	<p data-user-thumb="<%= userImg %>" id="userThumb"><img src="<%= userImg %>" /></p>
 </section>
 <script>
 ;(function(window) {
