@@ -12,7 +12,6 @@ exports.pen = function(req, res){
 		if (err) throw err;
 		res.render('pen', {
 			title: contact.name,
-			bitmapData: contact.bitmapData,
 			id: req.param('id'),
 			userName: userName,
 			userImg: userImg
