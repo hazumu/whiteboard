@@ -240,7 +240,12 @@ define([
 			}
 			
 			socket.sendData({
-				paths : app.pathDataList,
+				paths : {
+					startX: app.pastX,
+					startY: app.pastY,
+					endX: endX,
+					endY: endY
+				},
 				color : '#000',
 				thickness : '1',
 				type : 'pencil',
