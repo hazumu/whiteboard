@@ -35,7 +35,7 @@ define(["jquery"], function($) {
 			}
 		},
 		drawLine : function(fromx, fromy, tox, toy) {
-			
+			console.log(fromx, fromy, tox, toy);
 			var ctx = canvas.ctx;
 			ctx.beginPath();
 			ctx.strokeStyle = drawParams.color;

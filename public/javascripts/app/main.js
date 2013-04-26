@@ -34,11 +34,13 @@ define([
 		outputType: "",
 		userName : "",
 		userImg : "",
+		roomId : "",
 		init: function() {
 			app.connectIdElm = $('#connectId');
 			app.pathCollection = new Paths();
 			app.userName = $('#userName').attr('data-user-name');
 			app.userImg = $('#userImg').attr('data-user-img');
+			app.roomId = $('#roomId').attr('data-room-id');
 			outputType = app.CURSOR;
 
 			socket.init();
@@ -257,11 +259,18 @@ define([
 					name : app.userName,
 					img : app.userImg
 				},
-				roomId: 
+				roomId: app.roomId
 			});
 		},
 		onSocketData :function(e, data) {
-			canvas.draw(data.action, data);
+			console.log(data);
+			var path = data.paths;
+			canvas.drawLine(
+				path.startX,
+				path.startY,
+				path.endX,
+				path.endY
+			);
 		},
 		save: function(e) {
 			console.log('click save button');

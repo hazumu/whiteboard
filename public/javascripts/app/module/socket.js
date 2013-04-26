@@ -3,7 +3,8 @@ define(["jquery", '/socket.io/socket.io.js'], function($, io) {
 		ON_SOCKET_DATA : 'ON_SOCKET_DATA',
 		ON_NEW_CONNECT : 'ON_NEW_CONNECT',
 		// connectUrl : 'http://whitebord.herokuapp.com/',
-		connectUrl : location.origin,
+		// connectUrl : location.origin,
+		connectUrl : "http://127.0.0.1:3000/",
 		init : function() {
 			socket.id = 'id' + Math.round($.now()*Math.random());
 			socket.io = io.connect(socket.connectUrl);
