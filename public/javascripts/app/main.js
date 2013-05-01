@@ -1,22 +1,14 @@
 define([
 	'jquery',
+	'app/module/util',
 	'app/module/socket',
 	'app/module/canvas',
 	'app/module/storage',
 	'app/collection/Paths',
 	'app/view/Tools',
 	'app/view/Cursor'
-], function($, socket, canvas, storage, Paths, Tools, Cursor) {
-	var EVT = 'ontouchend' in window.document ? {
-		start : 'touchstart',
-		move : 'touchmove',
-		end : 'touchend'
-	} : {
-		start : 'mousedown',
-		move : 'mousemove',
-		end : 'mouseup'
-	};
-
+], function($, util, socket, canvas, storage, Paths, Tools, Cursor) {
+	var EVT = util.EVT;
 	var app = {
 		CANVAS : 'canvas',
 		CURSOR : 'cursor',
@@ -33,13 +25,14 @@ define([
 		switchInterval : 1000,
 		outputType: "",
 		userName : "",
-		userImg : "",
+		userThumb : "",
 		roomId : "",
 		init: function() {
 			app.connectIdElm = $('#connectId');
 			app.pathCollection = new Paths();
 			app.userName = $('#userName').attr('data-user-name');
-			app.userImg = $('#userImg').attr('data-user-img');
+			app.userThumb = $('#userThumb').attr('data-user-thumb');
+			console.log(app.userThumb);
 			app.roomId = $('#roomId').attr('data-room-id');
 			outputType = app.CURSOR;
 
@@ -268,6 +261,7 @@ define([
 							}] : 
 							null
 					},
+					eventType: event.type,
 					outputType : app.outputType,
 					paths : {
 						startX: app.pastX,
@@ -282,7 +276,7 @@ define([
 					},				
 					user : {
 						name : app.userName,
-						img : app.userImg
+						img : app.userThumb
 					},
 					roomId: app.roomId
 				});
