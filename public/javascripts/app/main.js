@@ -151,8 +151,10 @@ define([
 		// 	});
 		// },
 		handleEvent : function(event) {
-			event.preventDefault();
-			
+			if (event.preventDefault) {
+				event.preventDefault();
+			}
+			console.log(event.type, EVT.start);
 			switch (event.type) {
 				case EVT.start:
 					app.isDrow = true;
@@ -245,32 +247,56 @@ define([
 				}
 			}
 			
-			socket.sendData({
-				paths : {
-					startX: app.pastX,
-					startY: app.pastY,
-					endX: endX,
-					endY: endY
-				},
-				color : '#000',
-				thickness : '1',
-				type : 'pencil',
-				user : {
-					name : app.userName,
-					img : app.userImg
-				},
-				roomId: app.roomId
-			});
+			if (!event.isSocket) {
+				var changedTouches = event.changedTouches[0];
+				socket.sendData({
+					event : {
+						isSocket : true,
+						type : event.type,
+						x : event.x,
+						y : event.y,
+						offsetX : event.offsetX,
+						offsetY : event.offsetY,
+						changedTouches : event.changedTouches ? 
+							[{
+								clientX : changedTouches.clientX,
+								target : {
+									offsetLeft : changedTouches.target.offsetLeft,
+									offsetTop : changedTouches.target.offsetTop
+								},
+								clientY : changedTouches.clientY
+							}] : 
+							null
+					},
+					outputType : app.outputType,
+					paths : {
+						startX: app.pastX,
+						startY: app.pastY,
+						endX: endX,
+						endY: endY
+					},
+					drawInfo : {
+						color : '#000',
+						thickness : '1',
+						type : 'pencil',
+					},				
+					user : {
+						name : app.userName,
+						img : app.userImg
+					},
+					roomId: app.roomId
+				});
+			}
 		},
 		onSocketData :function(e, data) {
-			console.log(data);
-			var path = data.paths;
-			canvas.drawLine(
-				path.startX,
-				path.startY,
-				path.endX,
-				path.endY
-			);
+			app.handleEvent(data.event);
+			// var path = data.paths;
+			// canvas.drawLine(
+			// 	path.startX,
+			// 	path.startY,
+			// 	path.endX,
+			// 	path.endY
+			// );
 		},
 		save: function(e) {
 			console.log('click save button');
