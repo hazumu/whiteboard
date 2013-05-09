@@ -1,14 +1,16 @@
 var express          = require('express'),
-		mongoose         = require('mongoose'),
-		routes           = require('./routes'),
-		routesRoom       = require('./routes/room'),
-		routesPen        = require('./routes/pen'),
-		routesWhiteboard = require('./routes/whiteboard'),
-		http             = require('http'),
-		path             = require('path'),
-		passport         = require('passport'),
-		twitterStrategy  = require('passport-twitter').Strategy,
-		app              = express();
+	mongoose         = require('mongoose'),
+	routes           = require('./routes'),
+	routesRoom       = require('./routes/room'),
+	routesPen        = require('./routes/pen'),
+	routesWhiteboard = require('./routes/whiteboard'),
+	http             = require('http'),
+	url              = require('url'),
+	path             = require('path'),
+	socketIO = require('socket.io'),
+	passport         = require('passport'),
+	twitterStrategy  = require('passport-twitter').Strategy,
+	app              = express();
 
 app.configure(function(){
 	app.set('port', process.env.PORT || 3000);
@@ -98,22 +100,61 @@ server.listen(app.get('port'), function(){
 	console.log("Express server listening on port " + app.get('port'));
 });
 
-// add start
-var socketIO = require('socket.io');
 // クライアントの接続を待つ(IPアドレスとポート番号を結びつけます)
 var io = socketIO.listen(server);
+/*
+io.configure(function () {
+	io.set('authorization', function (handshake, callback) {
+
+	var id = handshake.query.id;
+
+	if (!io.namespaces.hasOwnProperty('/whiteboard/' + id)) {
+		var room = io.of('/whiteboard/' + id);
+		console.log('namesace');
+		console.log('/whiteboard/' + id);
+		room.on('connection', function (socket) {
+			socket.on('newconnect', function(data, req) {
+				console.log('new');
+				io.sockets.emit('newconnect', { value: data.value });
+			});
+
+			// メッセージを受けたときの処理
+			socket.on('message', function(data) {
+				// つながっているクライアント全員に送信
+				console.log(data);
+				// to
+				socket.broadcast.emit('message', { value: data.value });
+			});
+
+			// クライアントが切断したときの処理
+			socket.on('disconnect', function(){
+				console.log("disconnect");
+			});
+		});
+	}
+
+	callback(null, true);
+	});
+});
+*/
 
 // クライアントが接続してきたときの処理
-io.sockets.on('connection', function(socket) {
-	socket.on('newconnect', function(data) {
+io.of('/whiteboard')
+	.authorization(function(handshakeData, cb) {
+		console.log(handshakeData);
+	})
+	.on('connection', function(socket) {
+
+	socket.on('newconnect', function(data, req) {
 		io.sockets.emit('newconnect', { value: data.value });
 	});
+
 	// メッセージを受けたときの処理
 	socket.on('message', function(data) {
 		// つながっているクライアント全員に送信
-		console.log("message", data);
 		socket.broadcast.emit('message', { value: data.value });
 	});
+
 	// クライアントが切断したときの処理
 	socket.on('disconnect', function(){
 		console.log("disconnect");
