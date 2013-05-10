@@ -20,7 +20,8 @@ define([
 			if (app.users[data.id]) {
 				app.users[data.id].handleEvent(data);
 			}else {
-				throw new Error('app.users[data.socketid] is undefined');
+				app.users[data.id] = new app.User(data.socketid);
+				app.users[data.id].handleEvent(data);
 			}
 		},
 		onNewConnected : function(e, data) {

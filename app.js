@@ -139,11 +139,7 @@ io.configure(function () {
 */
 
 // クライアントが接続してきたときの処理
-io.of('/whiteboard')
-	.authorization(function(handshakeData, cb) {
-		console.log(handshakeData);
-	})
-	.on('connection', function(socket) {
+io.sockets.on('connection', function(socket) {
 
 	socket.on('newconnect', function(data, req) {
 		io.sockets.emit('newconnect', { value: data.value });
