@@ -17,11 +17,14 @@ define([
 		},
 		onSocketData :function(e, data) {
 			console.log(data);
-			if (app.users[data.id]) {
-				app.users[data.id].handleEvent(data);
-			}else {
+			if (!app.users[data.id]) {
 				app.users[data.id] = new app.User(data.socketid);
+			}
+
+			if (data.type === 'draw') {
 				app.users[data.id].handleEvent(data);
+			}else if (data.type === 'button') {
+				app.users[data.id].runButtonMethod(data.buttonType);
 			}
 		},
 		onNewConnected : function(e, data) {
@@ -115,6 +118,15 @@ define([
 				x : x,
 				y : y
 			};
+		},
+		runButtonMethod: function(buttonType) {
+			switch (buttonType) {
+				case 'clear':
+					canvas.clear();
+					break;
+				default :
+					break;
+			}
 		}
 	};
 

@@ -56,7 +56,7 @@ define(["jquery"], function($) {
 			// image.src = window.bitmapData;
 		},
 		clear: function() {
-			canvas.ctx.clearRect(0, 0, 320, 480);
+			canvas.ctx.clearRect(0, 0, canvas.element.width, canvas.element.height);
 		},
 		undo: function(models) {
 			canvas.draw(models);

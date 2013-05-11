@@ -60,6 +60,10 @@ define([
 			app.toolBtns.on(Tools.TOUCH_CLEAR, function() {
 				canvas.clear();
 				app.pathCollection.reset();
+				socket.sendData({
+					type: 'button',
+					buttonType: 'clear'
+				});
 			});
 			app.toolBtns.on(Tools.TOUCH_UNDO, function(e) {
 				app.pathCollection.undo();
@@ -243,6 +247,7 @@ define([
 			if (!event.isSocket) {
 				var changedTouches = event.changedTouches[0];
 				socket.sendData({
+					type: 'draw',
 					event : {
 						isSocket : true,
 						type : event.type,
