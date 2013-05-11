@@ -1,5 +1,6 @@
 define(["jquery"], function($) {
 	var drawParams = {
+		name : "",
 		type : "pencil",
 		color : "",
 		thickness: ""
@@ -12,6 +13,7 @@ define(["jquery"], function($) {
 		init : function() {
 			canvas.element = document.getElementById(canvas.canvasId);
 			canvas.element.width = window.innerWidth;
+			canvas.element.height = window.innerHeight;
 			canvas.ctx = canvas.element.getContext("2d");
 			canvas.isDrow = false;
 			if (window.bitmapData !== '') {
@@ -78,13 +80,22 @@ define(["jquery"], function($) {
 		updateDrawParams: function() {
 			switch (drawParams.type) {
 				case "pencil":
+					drawParams.name = "pencil";
 					drawParams.color = "#000";
 					drawParams.thickness = 10;
 					break;
 				case "eraser":
+					drawParams.name = "eraser";
 					drawParams.color = "#fff";
 					drawParams.thickness = 10;
 					break;
+			}
+		},
+		getDrawParams : function(propNAme) {
+			if (propNAme === 'all') {
+				return drawParams;
+			}else {
+				return drawParams[propNAme];
 			}
 		}
 	};

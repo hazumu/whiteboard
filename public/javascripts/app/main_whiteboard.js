@@ -66,9 +66,11 @@ define([
 			}
 		},
 		startHandler: function(data) {
-			this.pastX = data.paths.startX;
-			this.pastY = data.paths.startY;
+			var position = this.getPos(data, 'start');
+			this.pastX = position.x;
+			this.pastY = position.y;
 
+			canvas.setDrawType(data.drawInfo.name);
 			if (data.outputType === 'cursor') {
 				this.cursor.show();
 			}else {
@@ -76,8 +78,9 @@ define([
 			}
 		},
 		moveHandler: function(data) {
-			var endX = data.paths.endX,
-				endY = data.paths.endY;
+			var position = this.getPos(data, 'end');
+				endX = position.x,
+				endY = position.y;
 
 			if (data.outputType === 'cursor') {
 				this.cursor.position(endX, endY);
@@ -96,6 +99,22 @@ define([
 		},
 		endHandler: function(data) {
 
+		},
+		getPos: function(data, type) {
+			var x,y;
+			if (type === 'start') {
+				x = data.paths.startX / data.canvasW * canvas.element.width;
+				y = data.paths.startY / data.canvasH * canvas.element.height;
+			}else if (type === 'end') {
+				x = data.paths.endX / data.canvasW * canvas.element.width;
+				y = data.paths.endY / data.canvasH * canvas.element.height;
+			}else {
+				return null;
+			}
+			return {
+				x : x,
+				y : y
+			};
 		}
 	};
 

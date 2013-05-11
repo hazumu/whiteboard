@@ -22,7 +22,7 @@ define([
 		pastY : 0,
 		clients : {},
 		tapInterval : 0,
-		switchInterval : 1000,
+		switchInterval : 500,
 		outputType: "",
 		userName : "",
 		userThumb : "",
@@ -269,16 +269,14 @@ define([
 						endX: endX,
 						endY: endY
 					},
-					drawInfo : {
-						color : '#000',
-						thickness : '1',
-						type : 'pencil',
-					},				
+					drawInfo : canvas.getDrawParams('all'),
 					user : {
 						name : app.userName,
 						img : app.userThumb
 					},
-					roomId: app.roomId
+					roomId: app.roomId,
+					canvasW : canvas.element.width,
+					canvasH : canvas.element.height,
 				});
 			}
 		},
