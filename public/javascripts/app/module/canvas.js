@@ -51,7 +51,7 @@ define(["jquery"], function($) {
 			image.onload = $.proxy(function() {
 				ctx.drawImage(image, 0, 0);
 			}, this);
-			image.src = window.bitmapData;
+			//image.src = window.bitmapData;
 		},
 		clear: function() {
 			canvas.ctx.clearRect(0, 0, 320, 480);
