@@ -2,15 +2,14 @@ define([
 	'jquery',
 	'app/module/util',
 	'app/module/socket',
-	'app/module/canvas',
+	'app/view/Canvas',
 	'app/collection/Paths',
 	'app/view/Cursor'
-], function($, util, socket, canvas, Paths, Cursor) {
+], function($, util, socket, Canvas, Paths, Cursor) {
 	var EVT = util.EVT;
 	var app = {
 		users : [],
 		init: function() {
-			canvas.init();
 			socket.init();
 			$(window).on(socket.ON_SOCKET_DATA, app.onSocketData);
 			$(window).on(socket.ON_NEW_CONNECT, app.onNewConnected);
@@ -43,13 +42,22 @@ define([
 		cursor : null,
 		init: function() {
 			this.createCursor();
+			this.createCanvas();
 		},
 		createCursor : function() {
 			var copyCursorElm = $('.cursor-container').clone();
-			copyCursorElm[0].setAttribute("id", this.id);
+			copyCursorElm[0].setAttribute("id", this.id + "_corsor");
 			$('.wrapper').append(copyCursorElm[0]);
 			this.cursor = new Cursor({
-				el : '#' + this.id
+				el : '#' + this.id + "_corsor"
+			});
+		},
+		createCanvas: function() {
+			var copyCanvasElm = $('#canvas').clone();
+			copyCanvasElm[0].setAttribute("id", this.id + "_canvas");
+			$('.wrapper').append(copyCanvasElm[0]);
+			this.canvas = new Canvas({
+				el : '#' + this.id + "_canvas"
 			});
 		},
 		handleEvent : function(data) {
@@ -73,7 +81,7 @@ define([
 			this.pastX = position.x;
 			this.pastY = position.y;
 
-			canvas.setDrawType(data.drawInfo.name);
+			this.canvas.setDrawType(data.drawInfo.name);
 			if (data.outputType === 'cursor') {
 				this.cursor.show();
 			}else {
@@ -81,7 +89,7 @@ define([
 			}
 		},
 		moveHandler: function(data) {
-			var position = this.getPos(data, 'end');
+			var position = this.getPos(data, 'end'),
 				endX = position.x,
 				endY = position.y;
 
@@ -89,7 +97,7 @@ define([
 				this.cursor.position(endX, endY);
 			}else if (data.outputType === 'canvas') {
 				if(data.eventType !== EVT.start) {
-					canvas.drawLine(
+					this.canvas.drawLine(
 						this.pastX,
 						this.pastY,
 						endX,
@@ -106,11 +114,11 @@ define([
 		getPos: function(data, type) {
 			var x,y;
 			if (type === 'start') {
-				x = data.paths.startX / data.canvasW * canvas.element.width;
-				y = data.paths.startY / data.canvasH * canvas.element.height;
+				x = data.paths.startX / data.canvasW * this.canvas.el.width;
+				y = data.paths.startY / data.canvasH * this.canvas.el.height;
 			}else if (type === 'end') {
-				x = data.paths.endX / data.canvasW * canvas.element.width;
-				y = data.paths.endY / data.canvasH * canvas.element.height;
+				x = data.paths.endX / data.canvasW * this.canvas.el.width;
+				y = data.paths.endY / data.canvasH * this.canvas.el.height;
 			}else {
 				return null;
 			}
@@ -122,7 +130,7 @@ define([
 		runButtonMethod: function(buttonType) {
 			switch (buttonType) {
 				case 'clear':
-					canvas.clear();
+					this.canvas.clear();
 					break;
 				default :
 					break;

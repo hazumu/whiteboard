@@ -50,6 +50,11 @@ table {
   border-spacing: 0;
   font-size: 100%;
 }
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 caption {
   text-align: left;
 }
