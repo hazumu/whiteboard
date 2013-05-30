@@ -113,7 +113,7 @@ io.configure(function () {
 			console.log('no namespace', 'namesace', id);
 
 			var room = io.of('/whiteboard/' + id);
-			room.on('connect', function (socket) {
+			room.on('connection', function (socket) {
 				console.log('connnection');
 
 				socket.on('newconnect', function(data, req) {
@@ -139,9 +139,10 @@ io.configure(function () {
 		} else {
 			console.log('has namespace', 'namesace', id);
 
-			io.of('/whiteboard/' + id).on('newconnect', function (socket) {
+			io.of('/whiteboard/' + id).on('connection', function (socket) {
+				console.log('has id');
+
 				socket.on('newconnect', function(data, req) {
-					console.log('new');
 					io.sockets.emit('newconnect', { value: data.value });
 				});
 
