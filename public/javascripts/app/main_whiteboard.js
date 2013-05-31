@@ -23,7 +23,7 @@ define([
 			if (data.type === 'draw') {
 				app.users[data.id].handleEvent(data);
 			}else if (data.type === 'button') {
-				app.users[data.id].runButtonMethod(data.buttonType);
+				app.users[data.id].runButtonMethod(data);
 			}
 		},
 		onNewConnected : function(e, data) {
@@ -127,10 +127,17 @@ define([
 				y : y
 			};
 		},
-		runButtonMethod: function(buttonType) {
-			switch (buttonType) {
+		runButtonMethod: function(data) {
+			console.log(data.paths);
+			switch (data.buttonType) {
 				case 'clear':
 					this.canvas.clear();
+					break;
+				case 'undo':
+					this.canvas.undo(data.paths);
+					break;
+				case 'redo':
+					this.canvas.redo(data.paths);
 					break;
 				default :
 					break;

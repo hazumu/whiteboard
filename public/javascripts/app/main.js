@@ -69,13 +69,27 @@ define([
 				app.pathCollection.undo();
 				canvas.undo(app.pathCollection.models);
 				app.pathCollection.trigger('change');
+				socket.sendData({
+					type: 'button',
+					buttonType: 'undo',
+					paths: app.pathCollection.models
+				});
 			});
 			app.toolBtns.on(Tools.TOUCH_REDO, function() {
 				app.pathCollection.redo();
 				canvas.redo(app.pathCollection.models);
+				socket.sendData({
+					type: 'button',
+					buttonType: 'redo',
+					paths: app.pathCollection.models
+				});
 			});
 			app.toolBtns.on(Tools.TOUCH_SAVE, function() {
 				canvas.save();
+				socket.sendData({
+					type: 'button',
+					buttonType: 'save'
+				});
 			});
 			app.toolBtns.on(Tools.CHANGE_TOOL_TYPE, function(name) {
 				canvas.setDrawType(name);

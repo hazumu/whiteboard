@@ -27,6 +27,7 @@ define([
 				paths, p, j, jLen;
 			this.clear();
 			for(; i < len; i++){
+				console.log(pathDataList[i]);
 				paths = pathDataList[i].attributes.paths;
 				j = 0;
 				jLen = paths.length;
