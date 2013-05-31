@@ -80,7 +80,9 @@ app.post('/room_save', function(req, res, next) {
 });
 
 // ペン画面
-app.get('/room/:id/pen', ensureAuthenticated, routesPen.pen);
+// ToDo:一旦削除
+// app.get('/room/:id/pen', ensureAuthenticated, routesPen.pen);
+app.get('/room/:id/pen', routesPen.pen);
 
 // ホワイトボード画面
 app.get('/room/:id/whiteboard', routesWhiteboard.whiteboard);
@@ -102,60 +104,69 @@ server.listen(app.get('port'), function(){
 
 // クライアントの接続を待つ(IPアドレスとポート番号を結びつけます)
 var io = socketIO.listen(server);
-/*
 io.configure(function () {
 	io.set('authorization', function (handshake, callback) {
 
-	var id = handshake.query.id;
+		var id = handshake.query.id;
 
-	if (!io.namespaces.hasOwnProperty('/whiteboard/' + id)) {
-		var room = io.of('/whiteboard/' + id);
-		console.log('namesace');
-		console.log('/whiteboard/' + id);
-		room.on('connection', function (socket) {
-			socket.on('newconnect', function(data, req) {
-				console.log('new');
-				io.sockets.emit('newconnect', { value: data.value });
+		if (!io.namespaces.hasOwnProperty('/whiteboard/' + id)) {
+			console.log('no namespace', 'namesace', id);
+
+			var room = io.of('/whiteboard/' + id);
+			room.on('connection', function (socket) {
+				console.log('connnection');
+
+				socket.on('newconnect', function(data, req) {
+					console.log('new');
+					io.sockets.emit('newconnect', { value: data.value });
+				});
+
+				// メッセージを受けたときの処理
+				socket.on('message', function(data) {
+					// つながっているクライアント全員に送信
+					console.log(data);
+					// to
+					socket.broadcast.emit('message', { value: data.value });
+				});
+
+				// クライアントが切断したときの処理
+				socket.on('disconnect', function(){
+					console.log("disconnect");
+				});
 			});
 
-			// メッセージを受けたときの処理
-			socket.on('message', function(data) {
-				// つながっているクライアント全員に送信
-				console.log(data);
-				// to
-				socket.broadcast.emit('message', { value: data.value });
-			});
+		// id がある
+		} else {
+			console.log('has namespace', 'namesace', id);
 
-			// クライアントが切断したときの処理
-			socket.on('disconnect', function(){
-				console.log("disconnect");
-			});
-		});
-	}
+			io.of('/whiteboard/' + id).on('connection', function (socket) {
+				console.log('has id');
 
-	callback(null, true);
+				socket.on('newconnect', function(data, req) {
+					io.sockets.emit('newconnect', { value: data.value });
+				});
+
+				// メッセージを受けたときの処理
+				socket.on('message', function(data) {
+					// つながっているクライアント全員に送信
+					console.log(data);
+					// to
+					socket.broadcast.emit('message', { value: data.value });
+				});
+
+				// クライアントが切断したときの処理
+				socket.on('disconnect', function(){
+					console.log("disconnect");
+				});
+			});
+		}
+
+		callback(null, true);
 	});
 });
-*/
 
 // クライアントが接続してきたときの処理
-io.sockets.on('connection', function(socket) {
 
-	socket.on('newconnect', function(data, req) {
-		io.sockets.emit('newconnect', { value: data.value });
-	});
-
-	// メッセージを受けたときの処理
-	socket.on('message', function(data) {
-		// つながっているクライアント全員に送信
-		socket.broadcast.emit('message', { value: data.value });
-	});
-
-	// クライアントが切断したときの処理
-	socket.on('disconnect', function(){
-		console.log("disconnect");
-	});
-});
 
 // twitter認証
 var TWITTER_CONSUMER_KEY = "jUFkxa7JCwObA1gLn2d1cA";
