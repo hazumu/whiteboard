@@ -22,7 +22,7 @@ define([
 		pastY : 0,
 		clients : {},
 		tapInterval : 0,
-		switchInterval : 500,
+		switchInterval : 1000,
 		outputType: "",
 		userName : "",
 		userThumb : "",
@@ -36,7 +36,7 @@ define([
 			app.roomId = $('#roomId').attr('data-room-id');
 			outputType = app.CURSOR;
 
-			socket.init();
+			socket.init(app.userThumb);
 			$(window).on(socket.ON_SOCKET_DATA, app.onSocketData);
 			$(window).on(socket.ON_NEW_CONNECT, app.onNewConnected);
 
@@ -69,11 +69,14 @@ define([
 				app.pathCollection.undo();
 				canvas.undo(app.pathCollection.models);
 				app.pathCollection.trigger('change');
-				socket.sendData({
+
+				var obj = {
 					type: 'button',
 					buttonType: 'undo',
 					paths: app.pathCollection.models
-				});
+				};
+				socket.sendData(obj);
+				console.log("test=", obj);
 			});
 			app.toolBtns.on(Tools.TOUCH_REDO, function() {
 				app.pathCollection.redo();

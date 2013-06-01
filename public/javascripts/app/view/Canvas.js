@@ -28,7 +28,7 @@ define([
 			this.clear();
 			for(; i < len; i++){
 				console.log(pathDataList[i]);
-				paths = pathDataList[i].attributes.paths;
+				paths = pathDataList[i].paths;
 				j = 0;
 				jLen = paths.length;
 				for(; j < jLen; j++){

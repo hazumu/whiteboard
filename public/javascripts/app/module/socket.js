@@ -5,7 +5,8 @@ define(["jquery", '/socket.io/socket.io.js'], function($, io) {
 		// connectUrl : 'http://whitebord.herokuapp.com/',
 		// connectUrl : location.origin,
 		connectUrl : "http://127.0.0.1:3000/whiteboard/51794f5ef8cd8bd650000002?id=51794f5ef8cd8bd650000002",
-		init : function() {
+		init : function(iconImage) {
+			socket.iconImage = iconImage;
 			socket.id = 'id' + Math.round($.now()*Math.random());
 			socket.io = io.connect(socket.connectUrl);
 			socket.io.on('connect', socket.onConnected);
@@ -17,7 +18,8 @@ define(["jquery", '/socket.io/socket.io.js'], function($, io) {
 			socket.io.emit('newconnect', {value : {
 				sessid: socket.io.socket.transport.sessid,
 				connectName : socket.io.socket.transport.name,
-				socketid : socket.id
+				socketid : socket.id,
+				iconImage: socket.iconImage
 			}});
 		},
 		onNewConnected : function(data) {

@@ -15,7 +15,7 @@ define([
 			$(window).on(socket.ON_NEW_CONNECT, app.onNewConnected);
 		},
 		onSocketData :function(e, data) {
-			console.log(data);
+			console.log("white",data);
 			if (!app.users[data.id]) {
 				app.users[data.id] = new app.User(data.socketid);
 			}
@@ -128,7 +128,7 @@ define([
 			};
 		},
 		runButtonMethod: function(data) {
-			console.log(data.paths);
+			console.log(data);
 			switch (data.buttonType) {
 				case 'clear':
 					this.canvas.clear();
