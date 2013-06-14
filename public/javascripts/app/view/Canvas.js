@@ -28,9 +28,10 @@ define([
 			this.clear();
 			for(; i < len; i++){
 				console.log(pathDataList[i]);
-				paths = pathDataList[i].paths;
+				paths = pathDataList[i].attributes.paths;
 				j = 0;
 				jLen = paths.length;
+				console.log(jLen);
 				for(; j < jLen; j++){
 					p = paths[j];
 					this.drawLine(p.startX, p.startY, p.endX, p.endY);
