@@ -263,6 +263,7 @@ define([
 			
 			if (!event.isSocket) {
 				var changedTouches = event.changedTouches[0];
+				console.log("socket");
 				socket.sendData({
 					type: 'draw',
 					event : {

@@ -108,7 +108,9 @@ io.configure(function () {
 	io.set('authorization', function (handshake, callback) {
 
 		var id = handshake.query.id;
-
+		// console.log("namespace", io.namespaces);
+		// console.log("-------", '/whiteboard/' + id);
+		// console.log("???", io.namespaces['/whiteboard/' + id]);
 		if (!io.namespaces.hasOwnProperty('/whiteboard/' + id)) {
 			console.log('no namespace', 'namesace', id);
 
@@ -136,29 +138,6 @@ io.configure(function () {
 			});
 
 		// id がある
-		} else {
-			console.log('has namespace', 'namesace', id);
-
-			io.of('/whiteboard/' + id).on('connection', function (socket) {
-				console.log('has id');
-
-				socket.on('newconnect', function(data, req) {
-					io.sockets.emit('newconnect', { value: data.value });
-				});
-
-				// メッセージを受けたときの処理
-				socket.on('message', function(data) {
-					// つながっているクライアント全員に送信
-					console.log(data);
-					// to
-					socket.broadcast.emit('message', { value: data.value });
-				});
-
-				// クライアントが切断したときの処理
-				socket.on('disconnect', function(){
-					console.log("disconnect");
-				});
-			});
 		}
 
 		callback(null, true);

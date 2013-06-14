@@ -43,6 +43,7 @@ define([
 		init: function() {
 			this.createCursor();
 			this.createCanvas();
+			this.pathCollection = new Paths();
 		},
 		createCursor : function() {
 			var copyCursorElm = $('.cursor-container').clone();
@@ -80,6 +81,7 @@ define([
 			var position = this.getPos(data, 'start');
 			this.pastX = position.x;
 			this.pastY = position.y;
+			this.pathDataList = [];
 
 			this.canvas.setDrawType(data.drawInfo.name);
 			if (data.outputType === 'cursor') {
@@ -96,7 +98,14 @@ define([
 			if (data.outputType === 'cursor') {
 				this.cursor.position(endX, endY);
 			}else if (data.outputType === 'canvas') {
+
 				if(data.eventType !== EVT.start) {
+					this.pathDataList.push({
+						startX: this.pastX,
+						startY: this.pastY,
+						endX: endX,
+						endY: endY
+					});
 					this.canvas.drawLine(
 						this.pastX,
 						this.pastY,
@@ -109,7 +118,15 @@ define([
 			}
 		},
 		endHandler: function(data) {
-
+			if (data.outputType === 'canvas') {
+				console.log("data", data);
+				this.pathCollection.add({
+					paths : this.pathDataList,
+					color : '#000',
+					thickness : '1',
+					type : 'pencil'
+				}, true);
+			}
 		},
 		getPos: function(data, type) {
 			var x,y;
@@ -134,7 +151,8 @@ define([
 					this.canvas.clear();
 					break;
 				case 'undo':
-					this.canvas.undo(data.paths);
+					this.pathCollection.undo();
+					this.canvas.undo(this.pathCollection.models);
 					break;
 				case 'redo':
 					this.canvas.redo(data.paths);
