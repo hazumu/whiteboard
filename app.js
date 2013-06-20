@@ -105,6 +105,8 @@ server.listen(app.get('port'), function(){
 // クライアントの接続を待つ(IPアドレスとポート番号を結びつけます)
 var io = socketIO.listen(server);
 io.configure(function () {
+	io.set("transports", ["xhr-polling"]); 
+	io.set("polling duration", 10); 
 	io.set('authorization', function (handshake, callback) {
 
 		var id = handshake.query.id;
