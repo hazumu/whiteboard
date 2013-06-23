@@ -6,7 +6,7 @@ define([
 	var Cursor = View.extend({
 		el : '.cursor-container',
 		initialize: function(options) {
-			this.$el.html('<img src="'+options.imgpath+'" />');
+			this.$el.html('<img src="'+options.imgpath+'" width="20px"/>');
 		},
 		position: function(x, y) {
 			this.$el.css({
