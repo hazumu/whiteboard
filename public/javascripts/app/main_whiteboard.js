@@ -15,6 +15,7 @@ define([
 			$(window).on(socket.ON_NEW_CONNECT, app.onNewConnected);
 		},
 		onSocketData :function(e, data) {
+			alert('i');
 			console.log("white",data);
 			if (!app.users[data.id]) {
 				app.users[data.id] = new app.User(data.socketid);
@@ -27,7 +28,7 @@ define([
 			}
 		},
 		onNewConnected : function(e, data) {
-			console.log(data);
+			alert('2');
 			if (!app.users[data.socketid]) {
 				app.users[data.socketid] = new app.User(data.socketid);
 			}
