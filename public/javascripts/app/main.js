@@ -38,7 +38,7 @@ define([
 
 			socket.init(app.userThumb);
 			// $(window).on(socket.ON_SOCKET_DATA, app.onSocketData);
-			// $(window).on(socket.ON_NEW_CONNECT, app.onNewConnected);
+			$(window).on(socket.ON_NEW_CONNECT, app.onNewConnected);
 
 			canvas.init();
 			canvas.element.addEventListener(EVT.start, this, false);

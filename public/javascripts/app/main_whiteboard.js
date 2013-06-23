@@ -15,10 +15,11 @@ define([
 			$(window).on(socket.ON_NEW_CONNECT, app.onNewConnected);
 		},
 		onSocketData :function(e, data) {
-			alert('i');
 			console.log("white",data);
 			if (!app.users[data.id]) {
-				app.users[data.id] = new app.User(data.socketid);
+				app.users[data.id] = new app.User(data.socketid,{
+					thumbnailPath: data.user.img
+				});
 			}
 
 			if (data.type === 'draw') {
@@ -28,15 +29,18 @@ define([
 			}
 		},
 		onNewConnected : function(e, data) {
-			alert('2');
+			console.log(data);
 			if (!app.users[data.socketid]) {
-				app.users[data.socketid] = new app.User(data.socketid);
+				app.users[data.socketid] = new app.User(data.socketid, {
+					thumbnailPath: data.user.img
+				});
 			}
 		}
 	};
 
-	var User = function(socketid) {
+	var User = function(socketid, options) {
 		this.id = socketid;
+		this.options = options;
 		this.init();
 	};
 	User.prototype = {
@@ -51,7 +55,8 @@ define([
 			copyCursorElm[0].setAttribute("id", this.id + "_corsor");
 			$('.wrapper').append(copyCursorElm[0]);
 			this.cursor = new Cursor({
-				el : '#' + this.id + "_corsor"
+				el : '#' + this.id + "_corsor",
+				imgpath: this.options.thumbnailPath
 			});
 		},
 		createCanvas: function() {
