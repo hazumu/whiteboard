@@ -1,37 +1,69 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
-	<title><%= title %></title>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-	<link rel='stylesheet' href='/stylesheets/style.css' />
+<%- include ./include/html_header.ejs %>
+<style type="text/css">
+	.t-a-c {
+		text-align: center;
+	}
+	.box-link {
+		display: block;
+		line-height: 40px;
+	}
+	.face-unit {
+		padding: 20px;
+		background-color: #EEE;
+		-webkit-border-radius: 6px;
+		-moz-border-radius: 6px;
+		border-radius: 6px;
+	}
+</style>
 </head>
 <body>
-<h1>socket.io canvasアプリ</h1>
-<p>ようこそ:<%= userName %>さん</p>
-<p><img src="<%= userImg %>" /></p>
-
-<section>
-<h1>ルーム一覧</h1>
-<% for (var i in lists)  { %> 
-<p><a href="./room/<%= lists[i].id %>"><%= lists[i].name %></a></p>
-<% } %> 
-</section>
-
-<section>
-	<h1>ルーム作成</h1>
-	<form method="post" action="/room_create">
-	<div class="post">
-		<p>
-				<span>ルーム名: </span>
-				<input type="text" name="name">
-		</p>
-		<p>
-				<input type="submit" value="送信">
-		</p>
+<div class="navbar navbar-inverse navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container">
+			<a class="brand" href="/">ホワイトボード君</a>
+		</div>
 	</div>
-	</form>
-</section>
+</div>
+<div class="container">
+
+	<div class="row">
+
+		<div class="span3 face-unit">
+			<p class="t-a-c">ようこそ<strong><%= userName %></strong>さん</p>
+			<div class="t-a-c"><img src="<%= userImg %>" /></div>
+		</div>
+
+		<div class="span6">
+			<section>
+			<h2>ホワイトボード一覧</h2>
+			<% if (lists)  { %> 
+			<ul>
+				<% for (var i in lists)  { %> 
+				<li><a class="box-link" href="./room/<%= lists[i].id %>"><%= lists[i].name %></a></li>
+				<% } %> 
+			</ul>
+			<% } %> 
+			</section>
+
+			<section>
+				<h2>ホワイトボード作成</h2>
+				<form method="post" action="/room_create">
+					<fieldset>
+						<input type="text" name="name" placeholder="ルーム名を入力してください">
+						<input type="submit" class="btn btn-primary btn-large  btn-block " value="作成">
+					</fieldset>
+				</form>
+			</section>
+		</div>
+
+	</div>
+	<!-- /.row -->
+
+</div>
+<!-- /.container -->
+
 </body>
 </html>

@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
-	<title>ログイン</title>
-	<link rel='stylesheet' href='/stylesheets/style.css' />
+<%- include ./include/html_header.ejs %>
 </head>
 <body>
-
-<section>
-<h1>ログイン1</h1>
-<a href="/auth/twitter">twitter login</a>
+<div class="navbar navbar-inverse navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container">
+			<a class="brand" href="/">ホワイトボード君</a>
+		</div>
+	</div>
+</div>
+<div class="container">
+	<a class="btn btn-primary btn-large btn-block" href="/auth/twitter">twitter login</a>
+</div>
 </body>
 </html>
