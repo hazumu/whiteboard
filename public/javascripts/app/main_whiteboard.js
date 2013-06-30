@@ -38,6 +38,7 @@ define([
 		}
 	};
 
+	var counter = 0;
 	var User = function(socketid, options) {
 		this.id = socketid;
 		this.options = options;
@@ -46,25 +47,27 @@ define([
 	User.prototype = {
 		cursor : null,
 		init: function() {
+			counter++;
 			this.createCursor();
 			this.createCanvas();
 			this.pathCollection = new Paths();
 		},
 		createCursor : function() {
+
 			var copyCursorElm = $('.cursor-container').clone();
-			copyCursorElm[0].setAttribute("id", this.id + "_corsor");
+			copyCursorElm[0].setAttribute("id", this.id + "_corsor" + counter);
 			$('.wrapper').append(copyCursorElm[0]);
 			this.cursor = new Cursor({
-				el : '#' + this.id + "_corsor",
+				el : '#' + this.id + "_corsor" + counter,
 				imgpath: this.options.thumbnailPath
 			});
 		},
 		createCanvas: function() {
 			var copyCanvasElm = $('#canvas').clone();
-			copyCanvasElm[0].setAttribute("id", this.id + "_canvas");
+			copyCanvasElm[0].setAttribute("id", this.id + "_canvas" + counter);
 			$('.wrapper').append(copyCanvasElm[0]);
 			this.canvas = new Canvas({
-				el : '#' + this.id + "_canvas"
+				el : '#' + this.id + "_canvas" + counter
 			});
 		},
 		handleEvent : function(data) {

@@ -157,7 +157,7 @@ var TWITTER_CONSUMER_SECRET = "Kitndv0bBmHyZjqt9BdEeuIsPt8Q8gi51CWGRrHP54";
 passport.use(new twitterStrategy({
 		consumerKey: TWITTER_CONSUMER_KEY,
 		consumerSecret: TWITTER_CONSUMER_SECRET,
-		callbackURL: process.env.IP ? process.env.IP + '/auth/twitter/callback' : "http://127.0.0.1:3000/auth/twitter/callback"
+		callbackURL: process.env.IP ? process.env.IP + '/auth/twitter/callback' : "http://192.168.1.100:3000/auth/twitter/callback"
 	},
 	function(token, tokenSecret, profile, done) {
 		passport.session.accessToken = token;
