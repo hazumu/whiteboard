@@ -1,15 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
-	<title><%= title %></title>
-	<link rel='stylesheet' href='/stylesheets/style.css' />
+<%- include ./include/html_header.ejs %>
+<style type="text/css">
+	.icon {
+		margin-right: 3px;
+	}
+	.box-link {
+		display: block;
+		line-height: 40px;
+	}
+</style>
 </head>
 <body>
-<div class="wrapper">
-	<p><a href="/room/<%= id %>/whiteboard">ホワイトボードへ</a></p>
-	<p><a href="/room/<%= id %>/pen">ペンへ</a></p>
+<div class="navbar navbar-inverse navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container">
+			<a class="brand" href="/">ホワイトボード君</a>
+		</div>
+	</div>
+</div>
+<div class="container">
+	<h2><%= title %></h2>
+	<div class="row">
+		<div class="span5"><a class="box-link" href="/room/<%= id %>/whiteboard"><i class="icon icon-picture"></i>ホワイトボード</a></div>
+		<div class="span5"><a class="box-link" href="/room/<%= id %>/pen"><i class="icon icon-pencil"></i>ペン</a></div>
+	</div>
 </div>
 </body>
 </html>

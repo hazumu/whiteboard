@@ -89,7 +89,7 @@ app.get('/room/:id/whiteboard', routesWhiteboard.whiteboard);
 
 // セッション
 app.get('/login', function(req, res) {
-	res.render('login');
+	res.render('login', {title:'ログイン'});
 })
 
 app.get('/logout', function(req, res){
